@@ -1,6 +1,5 @@
 package dungeon.engine;
 
-import dungeon.engine.cell.Cell;
 import javafx.scene.text.Text;
 
 public class GameEngine {
