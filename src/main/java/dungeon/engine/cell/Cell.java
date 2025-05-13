@@ -1,4 +1,4 @@
-package dungeon.engine;
+package dungeon.engine.cell;
 
 import javafx.scene.layout.StackPane;
 

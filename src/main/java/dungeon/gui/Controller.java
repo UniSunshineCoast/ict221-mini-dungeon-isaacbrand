@@ -1,6 +1,6 @@
 package dungeon.gui;
 
-import dungeon.engine.Cell;
+import dungeon.engine.cell.Cell;
 import dungeon.engine.GameEngine;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
