@@ -1,0 +1,36 @@
+v0.0.1-----------------------------------------------------------------------------------------------------------
+Base project directory structure to visualise requirements (may be altered -> mainly used for planning)
+
+> Altered Cell class into an abstract class
+> Added class skeletons into dungeon.engine package
+    > Level
+    > Movement
+    > Position
+    > Player
+    > Score
+    > Interaction (interface for cells with player interaction)
+> Created new package "cells" in dungeon.engine
+> Added class skeletons into dungeon.engine.cells package
+    > Empty
+    > Entry
+    > Gold
+    > HealthPotion
+    > Ladder
+    > MeleeMutant
+    > RangedMutant
+    > Trap
+    > Wall
+    > Collectable (abstract - Gold + HealthPotion classes)
+    > Mutant (abstract - MeleeMutant + RangedMutant classes)
+
+v0.0.2-----------------------------------------------------------------------------------------------------------
+Cleaned up file directory from previous messy commit during planning process.
+
+v0.0.3-----------------------------------------------------------------------------------------------------------
+Basic implementation of abstract classes and interaction interface for cell creation
+
+> Occupied Cell abstract class with basic requirements of all cells
+> Occupied Interaction interface with checks for player-cell interactions
+> Occupied Collectable abstract class with basic requirements of all collectable items (gold + health potion), extends Cell
+> Occupied Mutant abstract class with basic requirements of all mutant enemies, extends Cell
+> Created new changelog file for tracking commit version changes
