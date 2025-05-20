@@ -34,3 +34,9 @@ Basic implementation of abstract classes and interaction interface for cell crea
 > Occupied Collectable abstract class with basic requirements of all collectable items (gold + health potion), extends Cell
 > Occupied Mutant abstract class with basic requirements of all mutant enemies, extends Cell
 > Created new changelog file for tracking commit version changes
+
+v0.0.4-----------------------------------------------------------------------------------------------------------
+Basic implementation of the Player class
+
+> Occupied Player class with basic implementation / planning of player requirements
+> Implemented / planned basic getters + setters for relevant class requirements
