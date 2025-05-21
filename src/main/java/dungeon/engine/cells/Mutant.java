@@ -6,29 +6,24 @@ import dungeon.engine.Player;
 
 // abstract for melee and ranged mutant enemies
 public abstract class Mutant extends Cell implements Interaction {
-    private int score = 2;
+    private static final int SCORE_VALUE = 2;
 
-    private boolean mutantDefeated = false;
-
-    private int damage;
+    protected boolean defeated = false;
+    protected final int damage;
 
     public Mutant(char cellSymbol, int damage) {
         super(cellSymbol, true);
         this.damage = damage;
     }
 
-    public boolean mutantIsDefeated() {
-        return mutantDefeated;
-    }
-
-    public void mutantSetDefeated(boolean defeated) {
-        this.mutantDefeated = defeated;
+    public void setDefeated(boolean defeated) {
+        this.defeated = defeated;
     }
 
     //-----------------------------------------------------------------INTERFACE OVERRIDES
     @Override
     public boolean cellRemoveOnUse() {
-        return mutantDefeated;
+        return defeated;
     }
 
     @Override
@@ -48,11 +43,9 @@ public abstract class Mutant extends Cell implements Interaction {
 
     @Override
     public int getScore() {
-        return score;
+        return SCORE_VALUE;
     }
 
     @Override
     public abstract String interact(Player player);
-
-
 }

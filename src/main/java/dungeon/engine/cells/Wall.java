@@ -2,6 +2,9 @@ package dungeon.engine.cells;
 
 import dungeon.engine.Cell;
 
+// wall cell
 public class Wall extends Cell {
-    // Wall cell
+    public Wall() {
+        super('#', false);
+    }
 }

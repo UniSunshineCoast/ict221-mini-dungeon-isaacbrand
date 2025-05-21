@@ -2,6 +2,9 @@ package dungeon.engine.cells;
 
 import dungeon.engine.Cell;
 
+// empty cell
 public class Empty extends Cell {
-    // empty cell
+    public Empty() {
+        super(' ', true);
+    }
 }
