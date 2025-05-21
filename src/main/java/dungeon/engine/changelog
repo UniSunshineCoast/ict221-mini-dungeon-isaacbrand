@@ -60,3 +60,14 @@ Implemented Level class
 > Base implementation general level requirements, currently implemented methods for:
     > Map creation, occupation and properties
     > Player-cell interactions
+
+v0.1.0-----------------------------------------------------------------------------------------------------------
+Game Engine Implementation and basic console game playable for testing
+
+> Implemented GameEngine class which handles all core game functionality as well as a console interface for testing, current features include:
+    > Game state management (level, player, difficulty and status)
+    > Game mechanics (essentially just core logic to make the game run)
+    > Level progression (difficulty scaling, level transitions)
+> Fixed method setEntryPos in Player class to handle all levels
+> Removed console output from tryRangedAttack method in RangedMutant class, output now handled in the GameEngine class
+> Updated Gold and HealthPotion class return outputs for better integration with the console game version in the GameEngine class

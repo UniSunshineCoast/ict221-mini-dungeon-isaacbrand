@@ -134,15 +134,13 @@ public class Level {
     //--------------------------------------------------------------------------------------- INTERACTIONS
     // method for levels 1 >, called in game engine once implemented
     public void setEntryPos(Position position) {
-        if (currentLevel > 1) {
-            // ensuring placement is inside wall perimeter
-            this.entryPos = new Position(position);
-            int x = position.getX();
-            int y = position.getY();
+        // ensuring placement is inside wall perimeter
+        this.entryPos = new Position(position);
+        int x = position.getX();
+        int y = position.getY();
 
-            map[y][x] = new Entry();
-            map[y][x].cellSetPos(x, y);
-        }
+        map[y][x] = new Entry();
+        map[y][x].cellSetPos(x, y);
     }
 
     // check and execute for ranged mutant attacks

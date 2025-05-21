@@ -41,7 +41,6 @@ public class RangedMutant extends Mutant {
         if (position.isInRange(player.getPosition(), RANGE)) {
             // 50% chance to damage with random boolean
             if (random.nextBoolean()) {
-                System.out.println("You were hit by a ranged attack and lost " + DAMAGE + " HP, where did that come from?");
                 return DAMAGE;
             }
         }

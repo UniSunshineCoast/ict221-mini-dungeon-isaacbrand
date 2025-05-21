@@ -12,7 +12,7 @@ public class HealthPotion extends Collectable {
 
     @Override
     public String interact(Player player) {
-        return "You found a health potion! You recovered " + HEAL_VALUE + " HP";
+        return "You found a health potion! You recovered " + HEAL_VALUE + " HP.";
     }
 
     @Override

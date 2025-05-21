@@ -12,7 +12,7 @@ public class Gold extends Collectable {
 
     @Override
     public String interact(Player player) {
-        return "You found some gold! Score increased by " + SCORE_VALUE;
+        return "You found some gold! Score increased by " + SCORE_VALUE + ".";
     }
 
     @Override
