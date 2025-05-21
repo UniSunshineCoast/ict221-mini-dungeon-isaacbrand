@@ -53,3 +53,10 @@ Implemented individual cell classes
 > Implemented Interaction interface for Entry and Ladder cells
 > Refactored and optimised Mutant abstract class
 > Added ranged attack calculations to RangedMutant class
+
+v0.0.7-----------------------------------------------------------------------------------------------------------
+Implemented Level class
+
+> Base implementation general level requirements, currently implemented methods for:
+    > Map creation, occupation and properties
+    > Player-cell interactions
