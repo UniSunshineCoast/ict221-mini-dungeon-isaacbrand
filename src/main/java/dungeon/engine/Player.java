@@ -3,7 +3,7 @@ package dungeon.engine;
 public class Player {
     private int hp;
     private int score;
-    private Position position; // not yet implemented
+    private Position position;
     private int steps;
     private final int maxSteps;
     private int level;
@@ -14,17 +14,42 @@ public class Player {
     public Player() {
         this.hp = MAX_HP;
         this.score = 0;
-        this.position = null; // temp for position implementation
+        this.position = new Position(0, 0); // placeholder position, will change with wall implementation
         this.steps = 0;
         this.maxSteps = MAX_STEPS;
         this.level = 1;
     }
 
-    // require position data for player start x, y
-    // might include max steps info in this method or create two methods for handling
+    public void startPos(int x, int y) {
+        this.position = new Position(x, y);
+    }
 
-    // need to implement player move handling
+    //-------------------------------------------------------------------------------------- MOVEMENT
+    public boolean moveUp() {
+        position.setY(position.getY()-1);
+        steps++;
+        return true;
+    }
 
+    public boolean moveDown() {
+        position.setY(position.getY()+1);
+        steps++;
+        return true;
+    }
+
+    public boolean moveLeft() {
+        position.setX(position.getX()-1);
+        steps++;
+        return true;
+    }
+
+    public boolean moveRight() {
+        position.setX(position.getX()+1);
+        steps++;
+        return true;
+    }
+
+    //-------------------------------------------------------------------------------------- INTERACTION
     // will handle player interactions with cells through the Interaction interface
     public String interact(Interaction interaction) {
         String result = interaction.interact(this);
@@ -81,7 +106,13 @@ public class Player {
 
     // score not yet implemented, placeholder
 
-    // position not yet implemented, placeholder
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
 
     // ---------------------------
     public int getSteps() {

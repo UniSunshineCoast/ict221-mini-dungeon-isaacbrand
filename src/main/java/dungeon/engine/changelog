@@ -40,3 +40,10 @@ Basic implementation of the Player class
 
 > Occupied Player class with basic implementation / planning of player requirements
 > Implemented / planned basic getters + setters for relevant class requirements
+
+v0.0.5-----------------------------------------------------------------------------------------------------------
+Basic implementation of the Position class and Player class Position integration and movement methods
+
+> Occupied Position class with basic methods
+> Removed Movement temp class and made movement methods occur inside the Player class for a more direct approach
+
