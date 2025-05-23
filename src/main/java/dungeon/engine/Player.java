@@ -6,7 +6,6 @@ public class Player {
     private Position position;
     private int steps;
     private final int maxSteps;
-    private int level;
 
     private static final int MAX_HP = 10;
     private static final int MAX_STEPS = 100;
@@ -17,7 +16,6 @@ public class Player {
         this.position = new Position(0, 0); // placeholder position, will change with wall implementation
         this.steps = 0;
         this.maxSteps = MAX_STEPS;
-        this.level = 1;
     }
 
     public void startPos(int x, int y) {
@@ -25,28 +23,24 @@ public class Player {
     }
 
     //-------------------------------------------------------------------------------------- MOVEMENT
-    public boolean moveUp() {
+    public void moveUp() {
         position.setY(position.getY()-1);
         steps++;
-        return true;
     }
 
-    public boolean moveDown() {
+    public void moveDown() {
         position.setY(position.getY()+1);
         steps++;
-        return true;
     }
 
-    public boolean moveLeft() {
+    public void moveLeft() {
         position.setX(position.getX()-1);
         steps++;
-        return true;
     }
 
-    public boolean moveRight() {
+    public void moveRight() {
         position.setX(position.getX()+1);
         steps++;
-        return true;
     }
 
     //-------------------------------------------------------------------------------------- INTERACTION
@@ -83,10 +77,6 @@ public class Player {
         score += amount;
     }
 
-    public void nextLevel() {
-        level++;
-    }
-
     public boolean checkSteps() {
         return steps >= maxSteps;
     }
@@ -104,27 +94,21 @@ public class Player {
         this.hp = Math.min(MAX_HP, Math.max(0, hp)); // hp bound check
     }
 
-    // score not yet implemented, placeholder
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     public Position getPosition() {
         return position;
     }
 
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    // ---------------------------
     public int getSteps() {
         return steps;
     }
-
-    public int getMaxSteps() {
-        return maxSteps;
-    }
-
-    // level not implemented yet, placeholder
-
 
     // could potentially add debugging for checks
 }

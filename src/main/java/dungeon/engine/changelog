@@ -71,3 +71,18 @@ Game Engine Implementation and basic console game playable for testing
 > Fixed method setEntryPos in Player class to handle all levels
 > Removed console output from tryRangedAttack method in RangedMutant class, output now handled in the GameEngine class
 > Updated Gold and HealthPotion class return outputs for better integration with the console game version in the GameEngine class
+
+v0.1.1-----------------------------------------------------------------------------------------------------------
+Implemented Score class with persistent score tracking.
+Added score integration with the GameEngine and Player classes.
+Optimised Player class.
+
+> Added getHighscores method to GameEngine class
+> Added score getters and setters to Player class
+
+> Improved move handling in Player class by changing method type from boolean to void
+> Removed setPosition method in Player class (unused)
+> Removed getMaxSteps method in Player class (unused)
+> Removed the level field in Player, updated references in GameEngine (fragmented implementation with levelNum field doing level tracking)
+> Refactored levelNum field in GameEngine to level
+> Fixed console output in the MeleeMutant class

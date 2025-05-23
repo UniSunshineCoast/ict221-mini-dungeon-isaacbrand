@@ -8,29 +8,30 @@ public class GameEngine {
     private Level currentLevel;
     private final Player player;
     private int difficulty;
-    private int levelNum;
+    private int level;
     private boolean gameOver;
     private int deathType;
+    private final Score scoreManager;
+    private boolean isNewHS;
 
     public GameEngine(int difficulty) {
         this.difficulty = Math.min(10, Math.max(0, difficulty)); // explain
-        this.levelNum = 1;
+        this.level = 1;
         this.player = new Player();
         this.gameOver = false;
         this.deathType = -1; // represents no death, 0 is death due to no hp, 1 is death due to max steps reached, etc...
+        this.scoreManager = new Score();
+        this.isNewHS = false;
+
         initLevel();
     }
 
     private void initLevel() {
-        currentLevel = new Level(levelNum, difficulty);
+        currentLevel = new Level(level, difficulty);
 
         // setting player pos to entry
         Position entryPos = currentLevel.getEntryPos();
         player.startPos(entryPos.getX(), entryPos.getY());
-
-        if (levelNum > 1) {
-            player.nextLevel();
-        }
     }
 
     // movement
@@ -111,24 +112,29 @@ public class GameEngine {
             }
 
             if (currentLevel.isLadder(player.getPosition())) {
-                if (levelNum == 1) {
+                if (level == 1) {
                     // next level
-                    levelNum = 2;
+                    level = 2;
                     difficulty += 2;
                     Position ladderPos = currentLevel.getLadderPos();
 
-                    currentLevel = new Level(levelNum, difficulty);
+                    currentLevel = new Level(level, difficulty);
 
                     currentLevel.setEntryPos(ladderPos);
 
                     player.startPos(ladderPos.getX(), ladderPos.getY());
-                    player.nextLevel();
 
-                    output += " Moving onto level " + levelNum + ". ";
+                    output += " Moving onto level " + level + ". ";
                 } else {
                     // player win
                     gameOver = true;
                     output += " Hey, that's the exit to the dungeon! You win!";
+
+                    // checking if score is a new high score
+                    isNewHS = scoreManager.addScore(player.getScore());
+                    if (isNewHS) {
+                        output += " Congratulations! You got a new high score!";
+                    }
                 }
 
                 return output; // early output to skip ranged attack checks on level transitions
@@ -155,13 +161,15 @@ public class GameEngine {
         if (!player.isAlive()) {
             gameOver = true;
             deathType = 0; // hp = 0
+            player.setScore(-1);
         } else if (player.checkSteps()) {
             gameOver = true;
             deathType = 1; // max steps reached
+            player.setScore(-1);
         }
     }
 
-    // getters
+    // map and game status getters
     public int getSize() {
         return Level.getSize();
     }
@@ -180,6 +188,10 @@ public class GameEngine {
 
     public int getDeathType() {
         return deathType;
+    }
+
+    public String getHighscores() {
+        return scoreManager.formatScores();
     }
 
     /**
@@ -208,7 +220,7 @@ public class GameEngine {
         GameEngine engine = new GameEngine(difficulty);
 
         System.out.println("The Basics: 'u' for up, 'd' for down, 'l' for left, 'r' for right and 'q' to quit the game.");
-        System.out.println("Current level: " + engine.levelNum);
+        System.out.println("Current level: " + engine.level);
 
         boolean quit = false;
         while (!quit && !engine.isGameOver()) {
@@ -218,6 +230,7 @@ public class GameEngine {
             // player info
             System.out.println("HP: " + engine.getPlayer().getHp());
             System.out.println("Steps: " + engine.getPlayer().getSteps());
+            System.out.println("Score: " + engine.getPlayer().getScore());
 
             // grabbing input
             System.out.print("Enter command: ");
@@ -249,7 +262,7 @@ public class GameEngine {
             }
         }
 
-        // score tracking implementation, also need to improve engine responsiveness to score tracking with mutants
+        // need to improve engine responsiveness to score tracking with mutants
 
         if (engine.isGameOver()){
             int deathType = engine.getDeathType();
@@ -259,6 +272,11 @@ public class GameEngine {
                 System.out.println("Game Over. You walked your last step.");
             }
         }
+
+        // score display
+        // should not appear if no scores are present
+        System.out.println("\n --High Scores--");
+        System.out.println(engine.getHighscores());
 
         // close
         System.out.println("Thanks for playing! (until next time...)");

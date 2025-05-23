@@ -13,6 +13,6 @@ public class MeleeMutant extends Mutant {
     @Override
     public String interact(Player player) {
         setDefeated(true);
-        return "You attacked a melee mutant! You lost " + DAMAGE + " HP in your battle but emerged victorious";
+        return "You attacked a melee mutant! You lost " + DAMAGE + " HP in your battle but you emerged victorious.";
     }
 }
