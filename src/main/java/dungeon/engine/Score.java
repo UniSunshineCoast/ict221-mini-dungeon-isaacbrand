@@ -41,7 +41,7 @@ public class Score implements Serializable {
     //------------------------------------------------------------------------------ MAIN CLASS
     private static final int MAX_STORE = 5; // max amount of scores to track
     private final List<ScoreEntry> highScores;
-    private static final String SCORE_FILE = "highscores.dat"; // filename
+    private static final String SCORE_FILE = "md_highscores.dat"; // filename
 
     // score init
     public Score() {

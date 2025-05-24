@@ -86,3 +86,12 @@ Optimised Player class.
 > Removed the level field in Player, updated references in GameEngine (fragmented implementation with levelNum field doing level tracking)
 > Refactored levelNum field in GameEngine to level
 > Fixed console output in the MeleeMutant class
+
+v0.1.2-----------------------------------------------------------------------------------------------------------
+Game save state implementation
+
+> Added game save/load functionality to the Game Engine for console testing
+> Implemented Serializable for GameEngine, Level, Position and Cell classes
+> Removed StackPane from Cell abstract class due to issues with saving, new Cell handling for JavaFX implemented with the CellFX class
+> Added placeholder implementation for CellFX class and updated Controller to utilise new implementation
+> Updated highscore save file name to "md_highscores"

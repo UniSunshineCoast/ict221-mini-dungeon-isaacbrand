@@ -1,9 +1,16 @@
 package dungeon.engine;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 // handles player positioning for ranged mutant attack and movement calculations
-public class Position {
+public class Position implements Serializable {
     private int x;
     private int y;
+
+    // serial version UID
+    @Serial
+    private static final long serialVersionUID = 0L;
 
     public Position(int x, int y) {
         this.x = x;

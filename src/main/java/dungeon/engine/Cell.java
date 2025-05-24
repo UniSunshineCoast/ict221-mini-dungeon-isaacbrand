@@ -2,7 +2,10 @@ package dungeon.engine;
 
 import javafx.scene.layout.StackPane;
 
-public abstract class Cell extends StackPane {
+import java.io.Serial;
+import java.io.Serializable;
+
+public abstract class Cell implements Serializable {
     // grid position (x, y)
     private int x;
     private int y;
@@ -10,10 +13,15 @@ public abstract class Cell extends StackPane {
     // Cell text symbol
     private final char cellSymbol;
 
+    // serial version UID
+    @Serial
+    private static final long serialVersionUID = 0L;
+
     // Need to add image view
 
     // If player can walk onto the cell
     private final boolean canWalk;
+
     public Cell(char cellSymbol, boolean canWalk) {
         this.cellSymbol = cellSymbol;
         this.canWalk = canWalk;

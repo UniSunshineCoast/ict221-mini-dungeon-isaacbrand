@@ -2,9 +2,10 @@ package dungeon.engine;
 
 import dungeon.engine.cells.Empty;
 
+import java.io.*;
 import java.util.Scanner;
 
-public class GameEngine {
+public class GameEngine implements Serializable {
     private Level currentLevel;
     private final Player player;
     private int difficulty;
@@ -13,6 +14,13 @@ public class GameEngine {
     private int deathType;
     private final Score scoreManager;
     private boolean isNewHS;
+
+    // serial version UID
+    @Serial
+    private static final long serialVersionUID = 0L;
+
+    // save file name
+    private static final String SAVE = "md_saves.dat";
 
     public GameEngine(int difficulty) {
         this.difficulty = Math.min(10, Math.max(0, difficulty)); // explain
@@ -199,27 +207,31 @@ public class GameEngine {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        GameEngine engine;
 
         System.out.println("Welcome to the Mini Dungeon! Mwahaha...");
-        System.out.print("Please enter your preferred difficulty (0-10, default 3): ");
-        String inputDifficulty = scanner.nextLine().trim();
 
-        int difficulty = 3;
-        if (!inputDifficulty.isEmpty()) {
-            try {
-                difficulty = Integer.parseInt(inputDifficulty);
-                if (difficulty < 0 || difficulty > 10) {
-                    System.out.println("Invalid input, using default difficulty...");
-                    difficulty = 3;
+        // checking for saved game
+        if (saveExists()) {
+            System.out.print("A saved game was found. Would you like to load it? (y/n): ");
+            String loadInput = scanner.nextLine().toLowerCase();
+
+            if (loadInput.equals("y")) {
+                engine = loadGame();
+                if (engine != null) {
+                    System.out.println("Game loaded!");
+                } else {
+                    System.out.println("Failed to load game. Starting a new game...");
+                    engine = newGame(scanner);
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input, using default difficulty...");
+            } else {
+                engine = newGame(scanner);
             }
+        } else {
+            engine = newGame(scanner);
         }
 
-        GameEngine engine = new GameEngine(difficulty);
-
-        System.out.println("The Basics: 'u' for up, 'd' for down, 'l' for left, 'r' for right and 'q' to quit the game.");
+        System.out.println("The Basics: 'u' for up, 'd' for down, 'l' for left, 'r' for right, 'q' to quit and 's' to save the game.");
         System.out.println("Current level: " + engine.level);
 
         boolean quit = false;
@@ -238,6 +250,9 @@ public class GameEngine {
 
             if (input.equals("q")) {
                 quit = true;
+            } else if (input.equals("s")) {
+                String saveOutput = engine.saveGame();
+                System.out.println(saveOutput);
             } else {
                 String result;
                 switch (input) {
@@ -275,12 +290,33 @@ public class GameEngine {
 
         // score display
         // should not appear if no scores are present
-        System.out.println("\n --High Scores--");
+        System.out.println("\n--High Scores--");
         System.out.println(engine.getHighscores());
 
         // close
         System.out.println("Thanks for playing! (until next time...)");
         scanner.close();
+    }
+
+    // game creation
+    private static GameEngine newGame(Scanner scanner) {
+        System.out.print("Please enter your preferred difficulty (0-10, default 3): ");
+        String inputDifficulty = scanner.nextLine().trim();
+
+        int difficulty = 3;
+        if (!inputDifficulty.isEmpty()) {
+            try {
+                difficulty = Integer.parseInt(inputDifficulty);
+                if (difficulty < 0 || difficulty > 10) {
+                    System.out.println("Invalid input, using default difficulty...");
+                    difficulty = 3;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input, using default difficulty...");
+            }
+        }
+
+        return new  GameEngine(difficulty);
     }
 
     // displaying map in console
@@ -298,5 +334,40 @@ public class GameEngine {
             }
             System.out.println();
         }
+    }
+
+    // save / load functionality
+    public String saveGame() {
+        try (ObjectOutputStream out = new ObjectOutputStream(
+                new BufferedOutputStream(new FileOutputStream(SAVE)))) {
+            out.writeObject(this);
+            return "Game saved!";
+        } catch (IOException e) {
+            return "Error saving game: " + e.getMessage();
+        }
+    }
+
+    public static GameEngine loadGame() {
+        File file = new File(SAVE);
+        if (!file.exists()) {
+            return null; // no save file
+        }
+
+        try (ObjectInputStream in = new ObjectInputStream(
+                new BufferedInputStream(new FileInputStream(SAVE)))) {
+            Object obj = in.readObject();
+            if (obj instanceof GameEngine) {
+                return (GameEngine) obj;
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error loading game: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    public static boolean saveExists() {
+        File file = new File(SAVE);
+        return file.exists();
     }
 }

@@ -1,11 +1,18 @@
 package dungeon.engine;
 
-public class Player {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Player implements Serializable {
     private int hp;
     private int score;
     private Position position;
     private int steps;
     private final int maxSteps;
+
+    // serial version UID
+    @Serial
+    private static final long serialVersionUID = 0L;
 
     private static final int MAX_HP = 10;
     private static final int MAX_STEPS = 100;

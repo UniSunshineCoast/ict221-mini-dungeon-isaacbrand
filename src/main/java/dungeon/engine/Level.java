@@ -2,10 +2,12 @@ package dungeon.engine;
 
 import dungeon.engine.cells.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Random;
 
 // handles current level management + level map creation
-public class Level {
+public class Level implements Serializable {
     private static final int SIZE = 10;
     private final int currentLevel;
     private final int difficulty;
@@ -13,6 +15,10 @@ public class Level {
     private Position entryPos;
     private Position ladderPos;
     private final Random random = new Random();
+
+    // serial version UID
+    @Serial
+    private static final long serialVersionUID = 0L;
 
     public Level(int currentLevel, int difficulty) {
         this.currentLevel = currentLevel;

@@ -1,6 +1,7 @@
 package dungeon.gui;
 
 import dungeon.engine.Cell;
+import dungeon.engine.CellFX;
 import dungeon.engine.GameEngine;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
@@ -26,7 +27,8 @@ public class Controller {
         for(int i = 0; i < engine.getSize(); i++) {
             for (int j = 0; j < engine.getSize(); j++) {
                 Cell cell = engine.getMap()[i][j];
-                gridPane.add(cell, j, i);
+                CellFX cellFX = new CellFX(cell);
+                gridPane.add(cellFX, j, i);
             }
         }
         gridPane.setGridLinesVisible(true);
