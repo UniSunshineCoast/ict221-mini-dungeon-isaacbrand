@@ -95,3 +95,15 @@ Game save state implementation
 > Removed StackPane from Cell abstract class due to issues with saving, new Cell handling for JavaFX implemented with the CellFX class
 > Added placeholder implementation for CellFX class and updated Controller to utilise new implementation
 > Updated highscore save file name to "md_highscores"
+
+v0.2.0-----------------------------------------------------------------------------------------------------------
+Implemented GameEngine Testing
+
+Tests:
+> Map Size
+> Initial Game State
+> Movement
+> Step Tracking
+> Invalid Move (attempting to walk into a wall)
+> Game Over
+> Interactions (if an interaction occurs on player/cell contact, does not test the type of interaction)
