@@ -107,3 +107,30 @@ Tests:
 > Invalid Move (attempting to walk into a wall)
 > Game Over
 > Interactions (if an interaction occurs on player/cell contact, does not test the type of interaction)
+
+v0.3.0-----------------------------------------------------------------------------------------------------------
+Significant OOD Improvements, full-coverage update to GameEngine testing and further bug fixes / optimisations
+
+"0 hours of sleep, the excerpt"
+
+Main Changes
+> Created ConsoleUI class, ScoreHandler interface and Map interface
+> Major optimisations, improvements and clean-up concerning the OOD of the engine package
+> Test coverage complete implementation, now handles tests for:
+    > Basic game state (map, player, game status)
+    > Player movement (all directions, collisions)
+    > Player/cell interactions (all interactable cells and their core features)
+    > Game progression (level transitions, difficulty increase)
+    > Game completion
+    > Game over conditions (hp = 0, steps = 100)
+    > High score handling with persistent scores
+    > Map generation
+    > Save/load functionality and error handling
+    > Helper methods to generate custom controlled map environments to assist in testing
+
+Details
+> Implemented proper composition between GameEngine and Player/Level classes
+> Refactored processMove method in GameEngine
+> Improved encapsulation in GameEngine class
+> Implemented copyFrom method in Player class for save/load handling
+> Created a dedicated ConsoleUI class and transferred handling for text-based gameplay from GameEngine class

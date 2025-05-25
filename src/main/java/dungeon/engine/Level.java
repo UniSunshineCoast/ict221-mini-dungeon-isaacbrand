@@ -7,31 +7,46 @@ import java.io.Serializable;
 import java.util.Random;
 
 // handles current level management + level map creation
-public class Level implements Serializable {
-    private static final int SIZE = 10;
+public class Level implements Map, Serializable {
+    private final int size;
     private final int currentLevel;
     private final int difficulty;
     private final Cell[][] map;
     private Position entryPos;
     private Position ladderPos;
-    private final Random random = new Random();
+    private final Random random;
 
     // serial version UID
     @Serial
     private static final long serialVersionUID = 0L;
 
-    public Level(int currentLevel, int difficulty) {
+    // configurable size
+    public Level(int currentLevel, int difficulty, int size) {
         this.currentLevel = currentLevel;
         this.difficulty = difficulty;
-        this.map = new Cell[SIZE][SIZE];
+        this.size = size;
+        this.map = new Cell[size][size];
+        this.random = new Random();
+
+        createMap();
+    }
+
+    // injected random for testing
+    public Level(int currentLevel, int difficulty, int size, Random random) {
+        this.currentLevel = currentLevel;
+        this.difficulty = difficulty;
+        this.size = size;
+        this.map = new Cell[size][size];
+        this.random = random;
+
         createMap();
     }
 
     //---------------------------------------------------------------- MAP GEN
     private void createMap() {
         // making all cells empty
-        for (int y = 0; y < SIZE; y++) {
-            for (int x = 0; x < SIZE; x++) {
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
                 // using [y][x] due to array indexing, first index is rows (up/down) and second index is columns (left/right) meaning [y][x] translates to (x, y)
                 map[y][x] = new Empty();
                 map[y][x].cellSetPos(x, y);
@@ -52,18 +67,18 @@ public class Level implements Serializable {
     }
 
     private void createWalls() {
-        for (int i = 0; i < SIZE; i++) {
+        for (int i = 0; i < size; i++) {
             // top + bottom
             map[0][i] = new Wall();
             map[0][i].cellSetPos(i, 0);
-            map[SIZE - 1][i] = new Wall();
-            map[SIZE - 1][i].cellSetPos(SIZE - 1, i);
+            map[size - 1][i] = new Wall();
+            map[size - 1][i].cellSetPos(size - 1, i);
 
             // left + right
             map[i][0] = new Wall();
             map[i][0].cellSetPos(0 , i);
-            map[i][SIZE - 1] = new Wall();
-            map[i][SIZE - 1].cellSetPos(SIZE - 1, i);
+            map[i][size - 1] = new Wall();
+            map[i][size - 1].cellSetPos(size - 1, i);
         }
 
         // could create internal wall algorithm to make dungeon more like a maze
@@ -73,7 +88,7 @@ public class Level implements Serializable {
         if (currentLevel == 1) {
             // placing entry at bottom left
             int x = 1;
-            int y = SIZE - 2;
+            int y = size - 2;
             entryPos = new Position(x, y);
             map[y][x] = new Entry();
             map[y][x].cellSetPos(x, y);
@@ -86,8 +101,8 @@ public class Level implements Serializable {
     private void placeLadder() {
         int x, y;
         do {
-            x = random.nextInt(SIZE - 2) + 1;
-            y = random.nextInt(SIZE - 2) + 1;
+            x = random.nextInt(size - 2) + 1;
+            y = random.nextInt(size - 2) + 1;
         } while (!(map[y][x] instanceof Empty));
 
         ladderPos = new Position(x, y);
@@ -118,8 +133,8 @@ public class Level implements Serializable {
             int x, y;
             do {
                 // ensuring placement is inside wall perimeter
-                x = random.nextInt(SIZE - 2) + 1;
-                y = random.nextInt(SIZE - 2) + 1;
+                x = random.nextInt(size - 2) + 1;
+                y = random.nextInt(size - 2) + 1;
             } while (!(map[y][x] instanceof Empty));
 
             try {
@@ -154,8 +169,8 @@ public class Level implements Serializable {
         int rangedDamage = 0;
 
         // checking cells for ranged mutants
-        for (int y = 0; y < SIZE; y++) {
-            for (int x = 0; x < SIZE; x++) {
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
                 Cell cell = map[y][x];
                 if (cell instanceof RangedMutant mutant) {
                     rangedDamage += mutant.tryRangedAttack(player);
@@ -174,13 +189,12 @@ public class Level implements Serializable {
         return map[y][x];
     }
 
-    public Cell setCell(Position position, Cell cell) {
+    public void setCell(Position position, Cell cell) {
         int x = position.getX();
         int y = position.getY();
 
         cell.cellSetPos(x, y);
         map[y][x] = cell;
-        return cell;
     }
 
     public boolean isLadder(Position position) {
@@ -203,15 +217,21 @@ public class Level implements Serializable {
         return new Position(ladderPos);
     }
 
-    public int getCurrentLevel() {
-        return currentLevel;
-    }
-
     public int getDifficulty() {
         return difficulty;
     }
 
-    public static int getSize() {
-        return SIZE;
+    public int getSize() {
+        return size;
+    }
+
+    // Testing
+    public void setLadderPos(Position position) {
+        this.ladderPos = new Position(position);
+        int x = position.getX();
+        int y = position.getY();
+
+        map[y][x] = new Ladder();
+        map[y][x].cellSetPos(x, y);
     }
 }

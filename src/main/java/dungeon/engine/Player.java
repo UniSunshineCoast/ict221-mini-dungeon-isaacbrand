@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 public class Player implements Serializable {
     private int hp;
+    private final int maxHp;
     private int score;
     private Position position;
     private int steps;
@@ -14,15 +15,20 @@ public class Player implements Serializable {
     @Serial
     private static final long serialVersionUID = 0L;
 
-    private static final int MAX_HP = 10;
-    private static final int MAX_STEPS = 100;
-
-    public Player() {
-        this.hp = MAX_HP;
+    public Player(int maxHp, int maxSteps) {
+        this.hp = maxHp;
+        this.maxHp = maxHp;
         this.score = 0;
         this.position = new Position(0, 0); // placeholder position, will change with wall implementation
         this.steps = 0;
-        this.maxSteps = MAX_STEPS;
+        this.maxSteps = maxSteps;
+    }
+
+    public void copyFrom(Player other) {
+        this.hp = other.hp;
+        this.score = other.score;
+        this.position = new Position(other.position);
+        this.steps = other.steps;
     }
 
     public void startPos(int x, int y) {
@@ -98,7 +104,7 @@ public class Player implements Serializable {
     }
 
     public void setHp(int hp) {
-        this.hp = Math.min(MAX_HP, Math.max(0, hp)); // hp bound check
+        this.hp = Math.min(maxHp, Math.max(0, hp)); // hp bound check
     }
 
     public int getScore() {
@@ -116,6 +122,4 @@ public class Player implements Serializable {
     public int getSteps() {
         return steps;
     }
-
-    // could potentially add debugging for checks
 }

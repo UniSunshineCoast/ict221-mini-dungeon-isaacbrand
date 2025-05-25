@@ -4,7 +4,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Score implements Serializable {
+public class Score implements ScoreHandler, Serializable {
     // inner class for representing a single high score entry
     public static class ScoreEntry implements Serializable, Comparable<ScoreEntry> {
         private final int score;
@@ -39,14 +39,20 @@ public class Score implements Serializable {
     }
 
     //------------------------------------------------------------------------------ MAIN CLASS
-    private static final int MAX_STORE = 5; // max amount of scores to track
+    private final int maxStore; // max amount of scores to track
+    private final String scoreFile; // filename
     private final List<ScoreEntry> highScores;
-    private static final String SCORE_FILE = "md_highscores.dat"; // filename
 
-    // score init
-    public Score() {
-        highScores = new ArrayList<>();
+    public Score(String scoreFile, int maxStore) {
+        this.scoreFile = scoreFile;
+        this.maxStore = maxStore;
+        this.highScores = new ArrayList<>();
         loadScores();
+    }
+
+    // default constructor
+    public Score(String scoreFile) {
+        this(scoreFile, 5);
     }
 
     // adds a new score to the list if conditions are met
@@ -63,8 +69,8 @@ public class Score implements Serializable {
         boolean isHighScore = checkHighScore(newEntry);
 
         // trimming list using max score limit if required
-        if (highScores.size() > MAX_STORE) {
-            highScores.subList(MAX_STORE, highScores.size()).clear();
+        if (highScores.size() > maxStore) {
+            highScores.subList(maxStore, highScores.size()).clear();
         }
 
         // saving changes
@@ -75,13 +81,13 @@ public class Score implements Serializable {
 
     // check if new entry is in the high score list
     public boolean checkHighScore(ScoreEntry entry) {
-        return highScores.indexOf(entry) < MAX_STORE;
+        return highScores.indexOf(entry) < maxStore;
     }
 
     // stores current high scores to disk
     public void saveScores() {
         try (ObjectOutputStream out = new ObjectOutputStream(
-                new BufferedOutputStream(new FileOutputStream(SCORE_FILE)))) {
+                new BufferedOutputStream(new FileOutputStream(scoreFile)))) {
             out.writeObject(highScores);
         } catch (IOException e) {
             System.err.println("Error saving scores: " + e.getMessage());
@@ -91,13 +97,13 @@ public class Score implements Serializable {
     // loading scores from disk
     @SuppressWarnings("unchecked")
     private void loadScores() {
-        File file = new File(SCORE_FILE);
+        File file = new File(scoreFile);
         if (!file.exists()) {
             return; // no score file
         }
 
         try (ObjectInputStream in = new ObjectInputStream(
-                new BufferedInputStream(new FileInputStream(SCORE_FILE)))) {
+                new BufferedInputStream(new FileInputStream(scoreFile)))) {
             Object obj = in.readObject();
             if (obj instanceof List) {
                 List<ScoreEntry> loadedScores = (List<ScoreEntry>) obj;
@@ -107,8 +113,8 @@ public class Score implements Serializable {
                 Collections.sort(highScores);
 
                 // trimming
-                if (highScores.size() > MAX_STORE) {
-                    highScores.subList(MAX_STORE, highScores.size()).clear();
+                if (highScores.size() > maxStore) {
+                    highScores.subList(maxStore, highScores.size()).clear();
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
