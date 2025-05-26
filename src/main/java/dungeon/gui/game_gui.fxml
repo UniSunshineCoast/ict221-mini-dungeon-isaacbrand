@@ -1,18 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<BorderPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dungeon.gui.Controller">
+<?import javafx.scene.text.Font?>
+<BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dungeon.gui.Controller">
     <padding>
         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
     </padding>
 
-    <center>
-        <GridPane fx:id="gridPane" prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+    <!-- top bar / save, help and quit -->
+    <top>
+        <HBox alignment="CENTER" spacing="15.0" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSave" text="Save"/>
+                <Button fx:id="helpButton" mnemonicParsing="false" onAction="#handleHelp" text="Help">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                </Button>
+            </HBox>
+            <Button fx:id="quitButton" mnemonicParsing="false" onAction="#handleQuit" text="Quit"/>
+        </HBox>
+    </top>
 
+    <!-- centre / gameplay -->
+    <center>
+        <GridPane fx:id="gridPane" alignment="CENTER" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
         </GridPane>
     </center>
 
+    <!-- right column / player state and movement -->
+    <right>
+        <VBox alignment="CENTER" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
 
+            <VBox alignment="CENTER" spacing="5.0">
+                <Label text="Player Info" underline="true">
+                    <font>
+                        <Font name="System Bold" size="14.0"/>
+                    </font>
+                </Label>
+                <Label fx:id="levelLabel" text="Level: 1"/>
+                <Label fx:id="hpLabel" text="HP: 10"/>
+                <Label fx:id="stepsLabel" text="Steps: 0"/>
+                <Label fx:id="scoreLabel" text="Score: 0"/>
+            </VBox>
+
+            <!-- spacing -->
+            <Region VBox.vgrow="NEVER"/>
+
+            <!-- movement controller -->
+            <VBox alignment="CENTER" spacing="5.0">
+                <Label text="Controller" underline="true">
+                    <font>
+                        <Font name="System Bold" size="14.0"/>
+                    </font>
+                </Label>
+                <Button fx:id="upButton" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleUp"
+                        text="Up"/>
+                <HBox alignment="CENTER" spacing="10.0">
+                    <Button fx:id="leftButton" maxWidth="100.0" minWidth="45.0" mnemonicParsing="false"
+                            onAction="#handleLeft" text="Left"/>
+                    <Button fx:id="rightButton" maxWidth="100.0" minWidth="45.0" mnemonicParsing="false"
+                            onAction="#handleRight" text="Right"/>
+                </HBox>
+                <Button fx:id="downButton" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleDown"
+                        text="Down"/>
+            </VBox>
+        </VBox>
+    </right>
+
+    <!-- left column / highscores -->
+    <left>
+        <VBox alignment="CENTER" prefWidth="200.0" spacing="20.0" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <Label text="Highscores" underline="true">
+                <font>
+                    <Font name="System Bold" size="14.0"/>
+                </font>
+            </Label>
+            <TextArea fx:id="highscoreArea" editable="false" prefHeight="200.0" prefWidth="180.0" wrapText="true"/>
+        </VBox>
+    </left>
+
+    <!-- bottom bar / status -->
+    <bottom>
+        <VBox BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </padding>
+            <Label text="Status: ">
+                <font>
+                    <Font name="System Bold" size="12.0"/>
+                </font>
+            </Label>
+            <TextArea fx:id="statusArea" editable="false" prefHeight="100.0" wrapText="true"/>
+        </VBox>
+    </bottom>
 </BorderPane>

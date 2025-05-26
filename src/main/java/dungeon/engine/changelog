@@ -158,3 +158,20 @@ ConsoleUI
 GameEngine
 > Optimised movement handling
 > Optimised loadGame method by reusing the saveExists() method rather than a dedicated existence check
+
+v0.4.0-----------------------------------------------------------------------------------------------------------
+Basic GUI and Controller implementation
+
+> Implemented complete layout structure, functionality and event handling for GUI version of the game
+
+Features:
+> Player status panel with HP, step, score and level indicators
+> Save, help and quit buttons
+> Basic controller for movement
+> Map display with player positioning highlight tracking
+> Added load and quit confirmations and a game over display
+> High score display
+> Save and quit option in quit confirmation menu
+> Auto-scrolling game status updates
+> Control disabling on game end
+
