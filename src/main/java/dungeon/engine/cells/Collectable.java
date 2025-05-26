@@ -6,19 +6,9 @@ import dungeon.engine.Player;
 
 // abstract for gold + health potion collectable items
 public abstract class Collectable extends Cell implements Interaction {
-    // if item has been collected
-    private boolean isCollected = false;
 
     public Collectable(char cellSymbol) {
         super(cellSymbol, true);
-    }
-
-    public boolean isCollected() {
-        return isCollected;
-    }
-
-    public void setCollected(boolean collected) {
-        this.isCollected = collected;
     }
 
     //-----------------------------------------------------------------INTERFACE OVERRIDES

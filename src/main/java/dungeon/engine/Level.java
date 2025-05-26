@@ -49,7 +49,7 @@ public class Level implements Map, Serializable {
             for (int x = 0; x < size; x++) {
                 // using [y][x] due to array indexing, first index is rows (up/down) and second index is columns (left/right) meaning [y][x] translates to (x, y)
                 map[y][x] = new Empty();
-                map[y][x].cellSetPos(x, y);
+                map[y][x].cellSetPos();
             }
         }
 
@@ -70,15 +70,15 @@ public class Level implements Map, Serializable {
         for (int i = 0; i < size; i++) {
             // top + bottom
             map[0][i] = new Wall();
-            map[0][i].cellSetPos(i, 0);
+            map[0][i].cellSetPos();
             map[size - 1][i] = new Wall();
-            map[size - 1][i].cellSetPos(size - 1, i);
+            map[size - 1][i].cellSetPos();
 
             // left + right
             map[i][0] = new Wall();
-            map[i][0].cellSetPos(0 , i);
+            map[i][0].cellSetPos();
             map[i][size - 1] = new Wall();
-            map[i][size - 1].cellSetPos(size - 1, i);
+            map[i][size - 1].cellSetPos();
         }
 
         // could create internal wall algorithm to make dungeon more like a maze
@@ -91,11 +91,9 @@ public class Level implements Map, Serializable {
             int y = size - 2;
             entryPos = new Position(x, y);
             map[y][x] = new Entry();
-            map[y][x].cellSetPos(x, y);
-        } else {
-            // should be placed below previous levels ladder
-            // planning to handle through the game engine
+            map[y][x].cellSetPos();
         }
+            // levels > 1 handled through game engine
     }
 
     private void placeLadder() {
@@ -107,7 +105,7 @@ public class Level implements Map, Serializable {
 
         ladderPos = new Position(x, y);
         map[y][x] = new Ladder();
-        map[y][x].cellSetPos(x, y);
+        map[y][x].cellSetPos();
     }
 
     private void placeItems() {
@@ -140,7 +138,7 @@ public class Level implements Map, Serializable {
             try {
                 Cell cell = cellType.getDeclaredConstructor().newInstance(); // grabs class constructors and creates a new instance
                 map[y][x] = cell;
-                map[y][x].cellSetPos(x, y);
+                map[y][x].cellSetPos();
 
                 // setting position for ranged mutant attack calculations
                 if (cell instanceof RangedMutant rangedMutant) {
@@ -161,7 +159,7 @@ public class Level implements Map, Serializable {
         int y = position.getY();
 
         map[y][x] = new Entry();
-        map[y][x].cellSetPos(x, y);
+        map[y][x].cellSetPos();
     }
 
     // check and execute for ranged mutant attacks
@@ -193,7 +191,7 @@ public class Level implements Map, Serializable {
         int x = position.getX();
         int y = position.getY();
 
-        cell.cellSetPos(x, y);
+        cell.cellSetPos();
         map[y][x] = cell;
     }
 
@@ -232,6 +230,6 @@ public class Level implements Map, Serializable {
         int y = position.getY();
 
         map[y][x] = new Ladder();
-        map[y][x].cellSetPos(x, y);
+        map[y][x].cellSetPos();
     }
 }

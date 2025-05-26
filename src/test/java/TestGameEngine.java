@@ -39,39 +39,39 @@ public class TestGameEngine {
             for (int x = 0; x < 10; x++) {
                 if (x == 0 || x == 9 || y == 0 || y == 9) {
                     map[y][x] = new Wall();
-                    map[y][x].cellSetPos(x, y);
+                    map[y][x].cellSetPos();
                 } else {
                     map[y][x] = new Empty();
-                    map[y][x].cellSetPos(x, y);
+                    map[y][x].cellSetPos();
                 }
             }
         }
 
         // placing cells at known locations
         map[8][1] = new Entry();// Entry at bottom left
-        map[8][1].cellSetPos(1, 8);
+        map[8][1].cellSetPos();
 
         map[7][1] = new Gold(); // Gold above entry
-        map[7][1].cellSetPos(1, 7);
+        map[7][1].cellSetPos();
 
         map[6][1] = new Trap(); // Trap above gold
-        map[6][1].cellSetPos(1, 6);
+        map[6][1].cellSetPos();
 
         map[5][1] = new MeleeMutant(); // Melee Mutant above trap
-        map[5][1].cellSetPos(1, 5);
+        map[5][1].cellSetPos();
 
         map[5][2] = new HealthPotion(); // Health potion to the right of the melee mutant
-        map[5][2].cellSetPos(2, 5);
+        map[5][2].cellSetPos();
 
         map[5][5] = new RangedMutant(); // Ranged Mutant three cells right of the health potion
-        map[5][5].cellSetPos(5, 5);
+        map[5][5].cellSetPos();
         // pos for attack calculations
         if (map[5][5] instanceof RangedMutant rangedMutant) {
             rangedMutant.setPosition(5, 5);
         }
 
         map[5][6] = new Ladder(); // Ladder to the right of the ranged mutant
-        map[5][6].cellSetPos(6, 5);
+        map[5][6].cellSetPos();
 
         // resetting player pos to entry
         engine.getPlayer().startPos(1, 8);
@@ -346,7 +346,7 @@ public class TestGameEngine {
         controlEngine.moveLeft(); // moving away from cell
 
         controlEngine.getMap()[5][2] = new HealthPotion(); // placing health potion
-        controlEngine.getMap()[5][2].cellSetPos(2, 5);
+        controlEngine.getMap()[5][2].cellSetPos();
 
         controlEngine.moveRight(); // moving to health potion
         assertEquals(10, controlEngine.getPlayer().getHp(), "HP should be capped at 10");
@@ -663,10 +663,10 @@ public class TestGameEngine {
             for (int x = 0; x < 10; x++) {
                 if (x == 0 || x == 9 || y == 0 || y == 9) {
                     map[y][x] = new Wall();
-                    map[y][x].cellSetPos(x, y);
+                    map[y][x].cellSetPos();
                 } else {
                     map[y][x] = new Empty();
-                    map[y][x].cellSetPos(x, y);
+                    map[y][x].cellSetPos();
                 }
             }
         }

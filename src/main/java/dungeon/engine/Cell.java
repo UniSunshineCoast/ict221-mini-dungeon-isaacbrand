@@ -1,14 +1,9 @@
 package dungeon.engine;
 
-import javafx.scene.layout.StackPane;
-
 import java.io.Serial;
 import java.io.Serializable;
 
 public abstract class Cell implements Serializable {
-    // grid position (x, y)
-    private int x;
-    private int y;
 
     // Cell text symbol
     private final char cellSymbol;
@@ -30,17 +25,8 @@ public abstract class Cell implements Serializable {
     }
 
     // sets cell position (x, y)
-    public void cellSetPos(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
+    public void cellSetPos() {
+        // grid position (x, y)
     }
 
     // grabs associated cell symbol

@@ -10,7 +10,7 @@ public class RangedMutant extends Mutant {
     private static final int DAMAGE = 2;
     private static final int RANGE = 2;
     private final Random random = new Random();
-    private Position position;
+    private final Position position;
 
     // defaults
     public RangedMutant() {
@@ -29,11 +29,6 @@ public class RangedMutant extends Mutant {
         this.position.setX(x);
         this.position.setY(y);
 
-    }
-
-    // sets position via position object for calculations
-    public void setPosition(Position position) {
-        this.position = new Position(position);
     }
 
     public int tryRangedAttack(Player player) {
@@ -56,9 +51,5 @@ public class RangedMutant extends Mutant {
     @Override
     public int getDamage() {
         return 0;
-    }
-
-    public Position getPosition() {
-        return new Position(position);
     }
 }

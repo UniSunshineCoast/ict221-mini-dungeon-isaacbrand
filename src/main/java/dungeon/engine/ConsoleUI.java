@@ -67,7 +67,7 @@ public class ConsoleUI {
     }
 
     private void runGameLoop() {
-        System.out.println("The Basics: 'u' for up, 'd' for down, 'l' for left, 'r' for right, 'q' to quit and 's' to save the game.");
+        System.out.println("The Basics: 'u' for up, 'd' for down, 'l' for left, 'r' for right, 'q' to quit, 'h' for help and 's' to save the game.");
         System.out.println("Current level: " + engine.getLevel());
 
         boolean quit = false;
@@ -132,6 +132,9 @@ public class ConsoleUI {
             case "r":
                 result = engine.moveRight();
                 break;
+            case "h":
+                displayHelp();
+                return;
             default:
                 System.out.println("Invalid command.");
                 return;
@@ -140,6 +143,33 @@ public class ConsoleUI {
         System.out.println(result);
     }
 
+    private void displayHelp() {
+        System.out.println("""
+                ---Help---
+                Commands:
+                u - move up
+                d - move down
+                l - move left
+                r - move right
+                s - save game
+                q - quit game
+                h - help
+                
+                Cells:
+                P - player
+                # - wall
+                G - gold
+                H - health potion
+                T - trap
+                M - melee mutant
+                R - ranged mutant
+                E - entry
+                L - ladder
+                
+                Goal:
+                Find the ladder in each level and keep progressing until you are done.
+                """);
+    }
     private void displayGameOver() {
         if (engine.isGameOver()){
             int deathType = engine.getDeathType();

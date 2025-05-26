@@ -1,5 +1,6 @@
-package dungeon.engine;
+package dungeon.gui;
 
+import dungeon.engine.Cell;
 import javafx.scene.layout.StackPane;
 
 public class CellFX extends StackPane {

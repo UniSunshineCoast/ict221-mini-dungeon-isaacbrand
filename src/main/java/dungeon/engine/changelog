@@ -134,3 +134,27 @@ Details
 > Improved encapsulation in GameEngine class
 > Implemented copyFrom method in Player class for save/load handling
 > Created a dedicated ConsoleUI class and transferred handling for text-based gameplay from GameEngine class
+
+v0.3.1-----------------------------------------------------------------------------------------------------------
+Code cleanup and optimisations
+
+Collectable
+> Removed isCollected and setCollected methods (handled through interact and cellRemoveOnUse, redundant)
+
+RangedMutant
+> Removed setPosition(Pos pos) and getPositon methods (setPosition(int x, int y) handles process, redundant)
+> Made Position field final (only used privately for calculations)
+
+Cell
+> removed getX and getY methods (handled through Level class, redundant)
+> removed fields x and y (redundant)
+
+CellFX
+> Refactored CellFX to GUI directory
+
+ConsoleUI
+> Added help command and display
+
+GameEngine
+> Optimised movement handling
+> Optimised loadGame method by reusing the saveExists() method rather than a dedicated existence check

@@ -68,32 +68,27 @@ public class GameEngine implements Serializable {
     private String processMove(String direction) {
         Position oldPos = new Position(player.getPosition());
         Position newPos = new Position(oldPos);
-        String output;
+        String output = "Moved " + direction;
 
         // movement calculations
         switch (direction.toLowerCase()) {
             case "up":
                 newPos.setY(oldPos.getY() - 1);
-                output = "Moved up"; // temp
                 break;
             case "down":
                 newPos.setY(oldPos.getY() + 1);
-                output = "Moved down"; // temp
                 break;
             case "left":
                 newPos.setX(oldPos.getX() - 1);
-                output = "Moved left"; // temp
                 break;
             case "right":
                 newPos.setX(oldPos.getX() + 1);
-                output = "Moved right"; // temp
                 break;
             default:
                 return "Invalid move.";
         }
 
         // checking if move is valid
-
         Cell targetCell = currentLevel.getCell(newPos);
         if (targetCell.cellCanWalk()) {
             output += " one step.";
@@ -212,15 +207,6 @@ public class GameEngine implements Serializable {
         return level;
     }
 
-    /**
-     * Plays a text-based game
-     */
-    public static void main(String[] args) {
-        // creating console ui and starting game
-        ConsoleUI consoleUI = new ConsoleUI();
-        consoleUI.start();
-    }
-
     // save / load functionality
     public String saveGame() {
         try (ObjectOutputStream out = new ObjectOutputStream(
@@ -233,8 +219,7 @@ public class GameEngine implements Serializable {
     }
 
     public boolean loadGame() {
-        File file = new File(savePath);
-        if (!file.exists()) {
+        if (!saveExists()) {
             return false; // no save file
         }
 
@@ -271,4 +256,12 @@ public class GameEngine implements Serializable {
         this.level = level;
     }
 
+    /**
+     * Plays a text-based game
+     */
+    public static void main(String[] args) {
+        // creating console ui and starting game
+        ConsoleUI consoleUI = new ConsoleUI();
+        consoleUI.start();
+    }
 }
