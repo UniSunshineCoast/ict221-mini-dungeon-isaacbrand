@@ -31,7 +31,11 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        // checking if load game exiists
+        // pre-loading images
+        CellFX preloader = new CellFX(null);
+        preloader.preload();
+
+        // checking if load game exists
         if (new File(savePath).exists()) {
             askLoadGame();
         } else {
@@ -48,8 +52,8 @@ public class Controller {
         // highscore display
         updateHighScores();
 
-        // gui init
-        updateGui();
+        // gui init - runs after layout pass
+        Platform.runLater(this::updateGui);
     }
 
     private void askLoadGame() {
@@ -111,27 +115,30 @@ public class Controller {
         // clearing old GUI grid pane
         gridPane.getChildren().clear();
 
-
-        // setting grid lines
-        gridPane.setGridLinesVisible(false);
-        gridPane.setGridLinesVisible(true);
-
         // get map and player pos
         Cell[][] map = engine.getMap();
         Position playerPos = engine.getPlayer().getPosition();
 
-        // grid calc
-        double gridWidth = gridPane.getPrefWidth() * 0.95;
-        double gridHeight = gridPane.getPrefHeight() * 0.95;
+        // grabbing current width and height of Gridpane
+        double paneWidth = gridPane.getWidth();
+        double paneHeight = gridPane.getHeight();
 
-        // cell calc
-        double cellSize = Math.min(
-                gridHeight / engine.getSize(),
-                gridWidth / engine.getSize()
-        );
+        // calculating width / height by subtracting padding
+        double paddingLeft = gridPane.getPadding().getLeft();
+        double paddingRight = gridPane.getPadding().getRight();
+        double paddingTop = gridPane.getPadding().getTop();
+        double paddingBottom = gridPane.getPadding().getBottom();
 
-        // minimum cell size
-        cellSize = Math.max(cellSize, 30);
+        double activeWidth = paneWidth - paddingLeft - paddingRight;
+        double activeHeight = paneHeight - paddingTop - paddingBottom;
+
+        double cellSize = 0;
+        if (activeWidth > 0 && activeHeight > 0) {
+            cellSize = Math.min(
+                    activeHeight / engine.getSize()
+                    ,activeWidth / engine.getSize()
+            );
+        }
 
         // player stat updates
         Player player = engine.getPlayer();
@@ -146,19 +153,21 @@ public class Controller {
                 Cell cell = map[i][j];
 
                 // visual cells
-                CellFX cellFX = new CellFX(cell);
-                cellFX.setPrefSize(cellSize, cellSize);
+                CellFX cellFX = new CellFX(cell, cellSize);
 
                 // marking player pos
                 if (i == playerPos.getY() && j == playerPos.getX()) {
-                    cellFX.setStyle("-fx-background-color: lightblue; -fx-border-color: blue");
-                    cellFX.getChildren().clear();
-                    cellFX.getChildren().add(new javafx.scene.text.Text(("P")));
+                    cellFX.playerOverlay();
                 }
 
                 gridPane.add(cellFX, j, i);
             }
         }
+
+        // making grid lines visisble (resets on each update instance)
+        gridPane.setGridLinesVisible(false);
+        gridPane.setGridLinesVisible(true);
+
         // checking if game is over
         if (engine.isGameOver()) {
             gameOver();

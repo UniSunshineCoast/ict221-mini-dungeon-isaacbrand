@@ -175,3 +175,15 @@ Features:
 > Auto-scrolling game status updates
 > Control disabling on game end
 
+v0.4.1-----------------------------------------------------------------------------------------------------------
+CellFX implementation and GUI image display
+
+CellFX
+> Implemented image display capabilities with coloured outlines for reference in help guide
+> Implemented a player position overlay
+> Implemented image pre-loading and caching
+
+Controller
+> Integrated CellFX class image methods
+> Re-calculated cell assignments to work with image allocations
+> Bug fixes and improvements tailored to issues from integration
