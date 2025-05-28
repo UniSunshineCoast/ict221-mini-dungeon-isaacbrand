@@ -1,21 +1,29 @@
-package dungeon.engine.cells;
+package dungeon.engine.cells.interactable;
 
 import dungeon.engine.Cell;
-import dungeon.engine.Interaction;
+import dungeon.engine.cells.Interaction;
 import dungeon.engine.Player;
 
-// abstract for melee and ranged mutant enemies
+// abstract class for melee and ranged mutant cells (interactable)
 public abstract class Mutant extends Cell implements Interaction {
-    private static final int SCORE_VALUE = 2;
-
     protected boolean defeated = false;
     protected final int damage;
 
+    /**
+     * Creates a new mutant cell
+     *
+     * @param cellSymbol cell character symbol
+     * @param damage amount of player / cell contact damage
+     */
     public Mutant(char cellSymbol, int damage) {
         super(cellSymbol, true);
         this.damage = damage;
     }
 
+    /**
+     * Sets mutant status to defeated
+     * @param defeated true if mutant has been defeated (player interacted with cell)
+     */
     public void setDefeated(boolean defeated) {
         this.defeated = defeated;
     }
@@ -43,7 +51,7 @@ public abstract class Mutant extends Cell implements Interaction {
 
     @Override
     public int getScore() {
-        return SCORE_VALUE;
+        return 2;
     }
 
     @Override

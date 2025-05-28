@@ -31,7 +31,7 @@ Basic implementation of abstract classes and interaction interface for cell crea
 
 > Occupied Cell abstract class with basic requirements of all cells
 > Occupied Interaction interface with checks for player-cell interactions
-> Occupied Collectable abstract class with basic requirements of all collectable items (gold + health potion), extends Cell
+> Occupied Collectable abstract class with basic requirements of all collectable items (gold + health potion)
 > Occupied Mutant abstract class with basic requirements of all mutant enemies, extends Cell
 > Created new changelog file for tracking commit version changes
 
@@ -64,13 +64,14 @@ Implemented Level class
 v0.1.0-----------------------------------------------------------------------------------------------------------
 Game Engine Implementation and basic console game playable for testing
 
-> Implemented GameEngine class which handles all core game functionality as well as a console interface for testing, current features include:
+> Implemented GameEngine class which handles all core game functionality as well as a console interface for testing,
+current features include:
     > Game state management (level, player, difficulty and status)
     > Game mechanics (essentially just core logic to make the game run)
     > Level progression (difficulty scaling, level transitions)
 > Fixed method setEntryPos in Player class to handle all levels
 > Removed console output from tryRangedAttack method in RangedMutant class, output now handled in the GameEngine class
-> Updated Gold and HealthPotion class return outputs for better integration with the console game version in the GameEngine class
+> Updated Gold and HealthPotion class return outputs for better integration with the console game version
 
 v0.1.1-----------------------------------------------------------------------------------------------------------
 Implemented Score class with persistent score tracking.
@@ -83,7 +84,8 @@ Optimised Player class.
 > Improved move handling in Player class by changing method type from boolean to void
 > Removed setPosition method in Player class (unused)
 > Removed getMaxSteps method in Player class (unused)
-> Removed the level field in Player, updated references in GameEngine (fragmented implementation with levelNum field doing level tracking)
+> Removed the level field in Player, updated references in GameEngine
+(fragmented implementation with levelNum field doing level tracking)
 > Refactored levelNum field in GameEngine to level
 > Fixed console output in the MeleeMutant class
 
@@ -92,7 +94,8 @@ Game save state implementation
 
 > Added game save/load functionality to the Game Engine for console testing
 > Implemented Serializable for GameEngine, Level, Position and Cell classes
-> Removed StackPane from Cell abstract class due to issues with saving, new Cell handling for JavaFX implemented with the CellFX class
+> Removed StackPane from Cell abstract class due to issues with saving,
+new Cell handling for JavaFX implemented with the CellFX class
 > Added placeholder implementation for CellFX class and updated Controller to utilise new implementation
 > Updated highscore save file name to "md_highscores"
 
@@ -187,3 +190,15 @@ Controller
 > Integrated CellFX class image methods
 > Re-calculated cell assignments to work with image allocations
 > Bug fixes and improvements tailored to issues from integration
+
+v1.0.0-----------------------------------------------------------------------------------------------------------
+Bug fixes and improvements
+
+> Improved and standardised class commenting schemes
+> Improved OOD of Gold, HealthPotion, MeleeMutant, Mutant, RangedMutant and Trap class
+> Refactored Interaction interface into dungeon.engine.cells
+> Refactored Empty and Wall classes into cells.set
+> Refactored Collectable, Entry, Gold, HealthPotion, Ladder, MeleeMutant,
+Mutant, RangedMutant and Trap classes into cells.interactable
+> Improved OOD of Map interface
+

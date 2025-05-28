@@ -1,6 +1,8 @@
-package dungeon.engine;
+package dungeon.engine.cells;
 
-// Interface for player interaction with cells
+import dungeon.engine.Player;
+
+// Interface for player interaction with cells (interactables)
 public interface Interaction {
     // handles player interaction
     String interact(Player player);

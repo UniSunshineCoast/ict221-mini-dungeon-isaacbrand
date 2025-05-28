@@ -1,18 +1,18 @@
-package dungeon.engine.cells;
+package dungeon.engine.cells.interactable;
 
 import dungeon.engine.Cell;
-import dungeon.engine.Interaction;
+import dungeon.engine.cells.Interaction;
 import dungeon.engine.Player;
 
-// ladder cell
-public class Ladder extends Cell implements Interaction {
-    public Ladder() {
-        super('L', true);
+// entry cell (interactable)
+public class Entry extends Cell implements Interaction {
+    public Entry() {
+        super('E', true);
     }
 
     @Override
     public String interact(Player player) {
-        return "You found a ladder!";
+        return "You peer into the level above, didn't you just come down?";
     }
 
     @Override

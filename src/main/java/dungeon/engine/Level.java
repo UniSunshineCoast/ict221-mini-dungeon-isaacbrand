@@ -1,12 +1,23 @@
 package dungeon.engine;
 
-import dungeon.engine.cells.*;
+import dungeon.engine.cells.set.Empty;
+import dungeon.engine.cells.set.Wall;
+import dungeon.engine.cells.interactable.Entry;
+import dungeon.engine.cells.interactable.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Random;
 
-// handles current level management + level map creation
+/**
+ * Main class for level functionality
+ * Handles:
+ * - Map creation and management
+ * - Cell placement
+ * - Level properties (difficulty, entry/ladder positions...)
+ * - Ranged attack handling
+ * - Player/cell interactions
+ */
 public class Level implements Map, Serializable {
     private final int size;
     private final int currentLevel;
@@ -20,7 +31,13 @@ public class Level implements Map, Serializable {
     @Serial
     private static final long serialVersionUID = 0L;
 
-    // configurable size
+    /**
+     * Creates a new level
+     *
+     * @param currentLevel current level number
+     * @param difficulty diffculty between 0-10
+     * @param size map size (width/height)
+     */
     public Level(int currentLevel, int difficulty, int size) {
         this.currentLevel = currentLevel;
         this.difficulty = difficulty;
@@ -31,7 +48,13 @@ public class Level implements Map, Serializable {
         createMap();
     }
 
-    // injected random for testing
+    /** Creates a new level with an injected random generator (used for testing)
+     *
+     * @param currentLevel current level number
+     * @param difficulty diffculty between 0-10
+     * @param size map size (width/height)
+     * @param random random number generator
+     */
     public Level(int currentLevel, int difficulty, int size, Random random) {
         this.currentLevel = currentLevel;
         this.difficulty = difficulty;
@@ -42,12 +65,18 @@ public class Level implements Map, Serializable {
         createMap();
     }
 
-    //---------------------------------------------------------------- MAP GEN
+    //------------------------------------------------------------------------------------- MAP GEN
+
+    /**
+     * Map creation and cell placements
+     * Fills map with empty cells, then adds walls, entry, ladder and item (interactable) cells
+     */
     private void createMap() {
         // making all cells empty
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                // using [y][x] due to array indexing, first index is rows (up/down) and second index is columns (left/right) meaning [y][x] translates to (x, y)
+                // using [y][x] due to array indexing, translates to (x, y)
+                // first index is rows (up/down) and second index is columns (left/right)
                 map[y][x] = new Empty();
                 map[y][x].cellSetPos();
             }
@@ -66,6 +95,9 @@ public class Level implements Map, Serializable {
         placeItems();
     }
 
+    /**
+     * Creates a perimeter of wall cells around the map
+     */
     private void createWalls() {
         for (int i = 0; i < size; i++) {
             // top + bottom
@@ -80,10 +112,13 @@ public class Level implements Map, Serializable {
             map[i][size - 1] = new Wall();
             map[i][size - 1].cellSetPos();
         }
-
-        // could create internal wall algorithm to make dungeon more like a maze
     }
 
+    /**
+     * Entry cell placement
+     * Level 1: bottom left corner
+     * Level 2+: set through setEntryPos method
+     */
     private void placeEntry() {
         if (currentLevel == 1) {
             // placing entry at bottom left
@@ -96,6 +131,9 @@ public class Level implements Map, Serializable {
             // levels > 1 handled through game engine
     }
 
+    /**
+     * Ladder cell placement
+     */
     private void placeLadder() {
         int x, y;
         do {
@@ -108,6 +146,9 @@ public class Level implements Map, Serializable {
         map[y][x].cellSetPos();
     }
 
+    /**
+     * Interactable item placements
+     */
     private void placeItems() {
         // gold
         placeItems(5, Gold.class);
@@ -125,7 +166,13 @@ public class Level implements Map, Serializable {
         placeItems(difficulty, RangedMutant.class);
     }
 
-    // helper for item placement
+    /**
+     * Item placement helper method
+     * Handles placement of a specific number of cells depending on type
+     *
+     * @param total number of cells to place
+     * @param cellType cell class
+     */
     private void placeItems(int total, Class<? extends Cell> cellType) {
         for (int i = 0; i < total; i++) {
             int x, y;
@@ -136,7 +183,8 @@ public class Level implements Map, Serializable {
             } while (!(map[y][x] instanceof Empty));
 
             try {
-                Cell cell = cellType.getDeclaredConstructor().newInstance(); // grabs class constructors and creates a new instance
+                // grabbing class constructors and creating a new instance
+                Cell cell = cellType.getDeclaredConstructor().newInstance();
                 map[y][x] = cell;
                 map[y][x].cellSetPos();
 
@@ -151,7 +199,11 @@ public class Level implements Map, Serializable {
     }
 
     //--------------------------------------------------------------------------------------- INTERACTIONS
-    // method for levels 1 >, called in game engine once implemented
+
+    /**
+     * Sets entry positon for levels 2+
+     * @param position entry placement positon
+     */
     public void setEntryPos(Position position) {
         // ensuring placement is inside wall perimeter
         this.entryPos = new Position(position);
@@ -162,7 +214,13 @@ public class Level implements Map, Serializable {
         map[y][x].cellSetPos();
     }
 
-    // check and execute for ranged mutant attacks
+    /**
+     * Checks for possible ranged mutant attacks
+     * Calculates total damage done by all instances of attacks
+     *
+     * @param player player to check attacks against
+     * @return total damage from attacks
+     */
     public int checkRange(Player player) {
         int rangedDamage = 0;
 
@@ -179,7 +237,14 @@ public class Level implements Map, Serializable {
         return rangedDamage;
     }
 
-    //-------------------------------------------------------------------------- UTILS
+    //-------------------------------------------------------------------------- UTIL METHODS
+
+    /**
+     * Gets cell at positon
+     *
+     * @param position positon to check
+     * @return cell at positon
+     */
     public Cell getCell(Position position) {
         int x = position.getX();
         int y = position.getY();
@@ -187,6 +252,11 @@ public class Level implements Map, Serializable {
         return map[y][x];
     }
 
+    /**
+     * Sets cell at positon
+     *
+     * @param position positon to place cell
+     */
     public void setCell(Position position, Cell cell) {
         int x = position.getX();
         int y = position.getY();
@@ -195,6 +265,12 @@ public class Level implements Map, Serializable {
         map[y][x] = cell;
     }
 
+    /**
+     * Checks if position contains a ladder cell
+     *
+     * @param position position to check
+     * @return true if position contains a ladder cell
+     */
     public boolean isLadder(Position position) {
         return ladderPos != null
                 && position.getX() == ladderPos.getX()
@@ -203,27 +279,58 @@ public class Level implements Map, Serializable {
     }
 
     //-------------------------------------------------------------------------- GETTERS AND SETTERS
+
+    /**
+     * Gets the 2d map cell array
+     *
+     * @return 2d array of cells
+     */
     public Cell[][] getMap() {
         return map;
     }
 
+    /**
+     * Gets the entry positon
+     *
+     * @return entry positon
+     */
     public Position getEntryPos() {
         return new Position(entryPos);
     }
 
+    /**
+     * Gets the ladder positon
+     *
+     * @return ladder position
+     */
     public Position getLadderPos() {
         return new Position(ladderPos);
     }
 
+    /**
+     * Gets the current difficulty
+     *
+     * @return difficulty (0-10)
+     */
     public int getDifficulty() {
         return difficulty;
     }
 
+    /**
+     * Gets the map size
+     * @return the size of the map
+     */
     public int getSize() {
         return size;
     }
 
-    // Testing
+    //-------------------------------------------------------------------------- TESTING UTILS
+
+    /**
+     * Sets the ladder position
+     *
+     * @param position position to place ladder
+     */
     public void setLadderPos(Position position) {
         this.ladderPos = new Position(position);
         int x = position.getX();

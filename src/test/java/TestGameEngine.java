@@ -1,5 +1,8 @@
 import dungeon.engine.*;
-import dungeon.engine.cells.*;
+import dungeon.engine.cells.set.Empty;
+import dungeon.engine.cells.set.Wall;
+import dungeon.engine.cells.interactable.Entry;
+import dungeon.engine.cells.interactable.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,11 +12,27 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class for GameEngine functionality
+ * Handles tests for:
+ * - Map initialisation
+ * - Map generation
+ * - Player movement
+ * - Step calculations
+ * - Player / cell interactions
+ * - Game progression
+ * - Game over conditions
+ * - Score handling
+ * - Save / load functionality
+ */
 public class TestGameEngine {
     private GameEngine engine;
     private GameEngine controlEngine;
     private final String testSavePath = "test_md_save.dat";
 
+    /**
+     * Cleans and creates a new test environment before each test
+     */
     @BeforeEach
     void setUp() {
         // regular engine with difficulty 3 before each test
@@ -30,7 +49,11 @@ public class TestGameEngine {
         }
     }
 
-    // creating a controlled GameEngine instance
+    /**
+     * Creates a controlled map layout for testing
+     *
+     * @param engine engine to configure with controlled creation
+     */
     private void createControl(GameEngine engine) {
         Level level = engine.getCurrentLevel();
         Cell[][] map = engine.getMap();
@@ -82,6 +105,10 @@ public class TestGameEngine {
     }
 
     //---------------------------------------------------------------------------------------- BASIC TESTING
+
+    /**
+     * Tests control map initialisation to ensure cells are set as intended
+     */
     @Test
     void testControlMap() {
         // testing initialisation
@@ -111,11 +138,19 @@ public class TestGameEngine {
 
     }
 
+    // Tests map size
     @Test
     void testGetSize() {
         assertEquals(10, engine.getSize());
     }
 
+    /**
+     * Tests that a new game starts with:
+     * - Game not over
+     * - No death type set (status: alive [-1])
+     * - Player exists
+     * - Map exists
+     */
     @Test
     void testInitialState() {
         assertFalse(engine.isGameOver());
@@ -125,6 +160,10 @@ public class TestGameEngine {
     }
 
     //------------------------------------------------------------------------------- MOVEMENT TESTING
+
+    /**
+     * Tests player movement in all four directions, verifies position changes
+     */
     @Test
     void testMovement() {
         // storing start pos
@@ -172,6 +211,9 @@ public class TestGameEngine {
         assertEquals(oldPos.getY(), newPos.getY());
     }
 
+    /**
+     * Tests step incrementation
+     */
     @Test
     void testStepTrack() {
         // getting start steps
@@ -182,6 +224,9 @@ public class TestGameEngine {
         assertEquals(startSteps + 1, engine.getPlayer().getSteps());
     }
 
+    /**
+     * Tests player walking into a wall interaction
+     */
     @Test
     void testInvalidMove() {
         // moving to find a boundary
@@ -199,6 +244,9 @@ public class TestGameEngine {
 
     //------------------------------------------------------------------------------------------ PLAYER/CELL INTERACTION TESTING
 
+    /**
+     * Tests player / cell interactions by spiralling around the map until any interaction occurs
+     */
     @Test
     void testInteraction() {
         // covering map until interaction occurs
@@ -258,6 +306,9 @@ public class TestGameEngine {
         assertTrue(foundInteraction);
     }
 
+    /**
+     * Tests player / gold cell interaction
+     */
     @Test
     void testGold() {
         // initial score
@@ -274,6 +325,9 @@ public class TestGameEngine {
         assertInstanceOf(Empty.class, checkCell, "Gold cell should disappear after interaction");
     }
 
+    /**
+     * Tests player / trap cell interaction
+     */
     @Test
     void testTrap() {
         // setting player pos to under the trap
@@ -299,6 +353,9 @@ public class TestGameEngine {
         assertEquals(trapHP - 2, controlEngine.getPlayer().getHp(), "Trap should damage player by 2 on repeat interactions");
     }
 
+    /**
+     * Tests player / melee mutant cell interaction
+     */
     @Test
     void testMeleeMutant() {
         // setting player pos to under the melee mutant
@@ -322,6 +379,9 @@ public class TestGameEngine {
         assertInstanceOf(Empty.class, checkCell, "Melee Mutant cell should disappear after interaction");
     }
 
+    /**
+     * Tests player / health potion cell interaction
+     */
     @Test
     void testHealthPotion() {
         // setting player pos to beside health potion
@@ -353,6 +413,9 @@ public class TestGameEngine {
 
     }
 
+    /**
+     * Tests player / ranged mutant cell interaction
+     */
     @Test
     void testRangedMutant() {
         // setting player pos to 2 steps away from ranged mutant
@@ -389,6 +452,9 @@ public class TestGameEngine {
     }
 
     //-------------------------------------------------------------------------------------------------------------- GAME PROGRESSION TESTING
+    /**
+     * Tests player / ladder cell interaction
+     */
     @Test
     void testLadder() {
         // setting play pos to beside ladder
@@ -411,6 +477,9 @@ public class TestGameEngine {
         assertEquals(2, newDiff, "Difficulty should increase by 2 on new level");
     }
 
+    /**
+     * Tests game completion status
+     */
     @Test
     void testGameComplete() {
         // creating an engine for level 2
@@ -431,9 +500,11 @@ public class TestGameEngine {
         assertTrue(result.contains("win"), "Should show win message");
     }
 
-    // game completion test
-
     //------------------------------------------------------------------------------------------ GAME MANAGEMENT TESTING
+
+    /**
+     * Tests game over by 0-HP result
+     */
     @Test
     void testGameOver() {
         // setting hp to 0 to test player death
@@ -446,6 +517,9 @@ public class TestGameEngine {
         assertEquals(0, engine.getDeathType()); // death to hp is 0
     }
 
+    /**
+     * Tests game over by max steps result
+     */
     @Test
     void testMaxSteps() {
         GameEngine stepsEngine = new GameEngine(0);
@@ -476,6 +550,10 @@ public class TestGameEngine {
     }
 
     //------------------------------------------------------------------------------------- SCORE TESTING
+
+    /**
+     * Ensures persistent scores are handled correctly (score saves, formatting and calculations)
+     */
     @Test
     void testPersistentScores() {
         // dedicated test file
@@ -532,6 +610,10 @@ public class TestGameEngine {
         }
     }
     //------------------------------------------------------------------------------------- MAP GENERATION TESTING
+
+    /**
+     * Tests regular GameEngine map generation
+     */
     @Test
     void testMapGen() {
         // new engine for map gen testing
@@ -597,7 +679,10 @@ public class TestGameEngine {
 
 
     //------------------------------------------------------------------------------------- SAVE/LOAD TESTING
-    // test save/load
+
+    /**
+     * Tests save / load functionality
+     */
     @Test
     void testSaveLoad() {
         // dedicated save engine with test save path
@@ -631,6 +716,9 @@ public class TestGameEngine {
         assertEquals(basePos.getY(), loadEngine.getPlayer().getPosition().getY(), "Player Y position should be preserved on load");
     }
 
+    /**
+     * Tests graceful invalid load handling
+     */
     @Test
     void testInvalidLoad() {
         // creating fake file path
@@ -653,7 +741,12 @@ public class TestGameEngine {
     }
 
     //------------------------------------------------------------------------------------- HELPERS
-    // helper for testing max steps
+
+    /**
+     * Controlled map creation with no cells for max step calculations
+     *
+     * @param engine engine to configure with controlled creation
+     */
     private void createWalkMap(GameEngine engine) {
         Level level = engine.getCurrentLevel();
         Cell[][] map = level.getMap();

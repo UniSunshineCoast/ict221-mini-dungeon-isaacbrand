@@ -1,7 +1,10 @@
 package dungeon.gui;
 
 import dungeon.engine.*;
-import dungeon.engine.cells.*;
+import dungeon.engine.cells.set.Empty;
+import dungeon.engine.cells.set.Wall;
+import dungeon.engine.cells.interactable.Entry;
+import dungeon.engine.cells.interactable.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -11,6 +14,11 @@ import javafx.scene.shape.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Visual cell representation for the JavaFX GUI
+ * Handles:
+ * - Cell rendering (with image and background colour)
+ */
 public class CellFX extends StackPane {
     private Cell cell;
     private final Map<String, Image> imageCache;
@@ -19,10 +27,21 @@ public class CellFX extends StackPane {
     private final Map<Class<?>, Color> colourMap;
     private final Map<Class<?>, String> imageMap;
 
+    /**
+     * Creates a rendered cell with default sizing
+     *
+     * @param cell to render
+     */
     public CellFX(Cell cell) {
         this(cell, 30.0);
     }
 
+    /**
+     * Creates a rendered cell with a set size
+     *
+     * @param cell to render
+     * @param cellSize size in pixels
+     */
     public CellFX(Cell cell, double cellSize) {
         this.cell = cell;
         this.cellSize = cellSize;
@@ -40,11 +59,20 @@ public class CellFX extends StackPane {
         updateCFX();
     }
 
+    /**
+     * Updates cell reference and refreshes
+     *
+     * @param cell new cell to render
+     */
     public void setCell(Cell cell) {
         this.cell = cell;
         updateCFX();
     }
 
+    /**
+     * Refreshes visuals
+     * Clears existing components and adds background colour / image if valid
+     */
     private void updateCFX() {
         this.getChildren().clear();
 
@@ -57,6 +85,11 @@ public class CellFX extends StackPane {
         }
     }
 
+    /**
+     * Renders a coloured background depending on cell type
+     *
+     * @return background colour of cell
+     */
     private Rectangle createCellBackground() {
         Rectangle background = new Rectangle(cellSize, cellSize);
 
@@ -67,6 +100,11 @@ public class CellFX extends StackPane {
         return background;
     }
 
+    /**
+     * Determines cell background colour
+     *
+     * @return colour of cell type
+     */
     private Color getCellColour() {
         if (cell == null) {
             return Color.WHITE;
@@ -76,6 +114,11 @@ public class CellFX extends StackPane {
         return colour != null ? colour : Color.WHITE;
     }
 
+    /**
+     * Assigns and image to a cell type and renders
+     *
+     * @return rendered image of cell type or null
+     */
     private ImageView createCellImage() {
         if (cell == null || cell instanceof Empty) {
             return null;
@@ -100,6 +143,12 @@ public class CellFX extends StackPane {
         return imageView;
     }
 
+    /**
+     * Gets image from cache or loads image from resources
+     *
+     * @param name image file name (before .png)
+     * @return the image, null if failed
+     */
     private Image getImage(String name) {
         // check if image is cached
         if (imageCache.containsKey(name)) {
@@ -125,6 +174,9 @@ public class CellFX extends StackPane {
         }
     }
 
+    /**
+     * Adds player image overlay to cell (for player movmement overlapping)
+     */
     public void playerOverlay() {
         Image playerImage = getImage("player");
         if (playerImage == null) {
@@ -137,11 +189,18 @@ public class CellFX extends StackPane {
         this.getChildren().add(playerView);
     }
 
-
+    /**
+     * Returns the current rendered cell
+     *
+     * @return current cell
+     */
     public Cell getCell() {
         return cell;
     }
 
+    /**
+     * Preloads game images into cache
+     */
     public void preload() {
         String[] imageNames = {
                 "wall"
@@ -160,6 +219,11 @@ public class CellFX extends StackPane {
         }
     }
 
+    /**
+     * Colour mapping initilisation
+     *
+     * @return map associating cell class background colours
+     */
     private Map<Class<?>, Color> initColourMap() {
         Map<Class<?>, Color> map = new HashMap<>();
         map.put(Wall.class, Color.BLACK);
@@ -174,6 +238,11 @@ public class CellFX extends StackPane {
         return map;
     }
 
+    /**
+     * Image mapping initilisation
+     *
+     * @return map associating cell class images
+     */
     private Map<Class<?>, String> initImageMap() {
         Map<Class<?>, String> map = new HashMap<>();
         map.put(Wall.class, "wall");

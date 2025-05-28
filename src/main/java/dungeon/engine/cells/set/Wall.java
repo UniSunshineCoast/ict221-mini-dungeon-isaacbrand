@@ -1,4 +1,4 @@
-package dungeon.engine.cells;
+package dungeon.engine.cells.set;
 
 import dungeon.engine.Cell;
 

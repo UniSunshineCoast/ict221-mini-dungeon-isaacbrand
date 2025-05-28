@@ -1,4 +1,4 @@
-package dungeon.engine.cells;
+package dungeon.engine.cells.interactable;
 
 import dungeon.engine.Player;
 import dungeon.engine.Position;
@@ -7,8 +7,6 @@ import java.util.Random;
 
 // Ranged mutant cell (mutant)
 public class RangedMutant extends Mutant {
-    private static final int DAMAGE = 2;
-    private static final int RANGE = 2;
     private final Random random = new Random();
     private final Position position;
 
@@ -32,11 +30,11 @@ public class RangedMutant extends Mutant {
     }
 
     public int tryRangedAttack(Player player) {
-        // checking if player is within range
-        if (position.isInRange(player.getPosition(), RANGE)) {
-            // 50% chance to damage with random boolean
+        // checking if player is within range (2)
+        if (position.isInRange(player.getPosition(), 2)) {
+            // 50% chance to deal 2 damage with random boolean
             if (random.nextBoolean()) {
-                return DAMAGE;
+                return 2;
             }
         }
         return 0;

@@ -4,34 +4,69 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * Manages score and highscore functionality
+ * Handles:
+ * - Score storage
+ * - Score loading
+ * - Score format
+ * - Serialization for persistent storage between sessions
+ * - Implements ScoreHandler interface for standardised score management
+ */
 public class Score implements ScoreHandler, Serializable {
-    // inner class for representing a single high score entry
+    /**
+     * Inner class representing a single highscore entry
+     * Stores score value and date
+     */
     public static class ScoreEntry implements Serializable, Comparable<ScoreEntry> {
         private final int score;
         private final String date;
 
-        // new score entry with date
+        /**
+         * Creates a score entry with the current date
+         *
+         * @param score final score value
+         */
         public ScoreEntry(int score) {
             this.score = score;
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             this.date = dateFormat.format(new Date());
         }
 
+        /**
+         * Gets the score value
+         *
+         * @return score value
+         */
         public int getScore() {
             return score;
         }
 
+        /**
+         * Gets the date of when score was achieved
+         *
+         * @return formatted date string
+         */
         public String getDate() {
             return date;
         }
 
-        // compares score entries (used for sorting)
+        /**
+         * Compares score entries and sorts in descending order)
+         * @param other score entry to compare with
+         * @return comparison result
+         */
         @Override
         public int compareTo(ScoreEntry other) {
             // sorting by desc order
             return Integer.compare(other.score, this.score);
         }
 
+        /**
+         * Converts core entry to a string
+         *
+         * @return score and date as a string
+         */
         @Override
         public String toString() {
             return score + " " + date;
@@ -43,6 +78,12 @@ public class Score implements ScoreHandler, Serializable {
     private final String scoreFile; // filename
     private final List<ScoreEntry> highScores;
 
+    /**
+     * Creates a Score instance with set file path and max scores to be saved
+     *
+     * @param scoreFile save file path
+     * @param maxStore max amount of saved scores
+     */
     public Score(String scoreFile, int maxStore) {
         this.scoreFile = scoreFile;
         this.maxStore = maxStore;
@@ -50,12 +91,22 @@ public class Score implements ScoreHandler, Serializable {
         loadScores();
     }
 
-    // default constructor
+    /**
+     * Score instance with a max storage value of 5
+     *
+     * @param scoreFile save file path
+     */
     public Score(String scoreFile) {
         this(scoreFile, 5);
     }
 
-    // adds a new score to the list if conditions are met
+    /**
+     * Adds a new high score to the persisted list if qualifiable
+     * Sorted in descending order and trimmed to maxStore entries, negative/0 scores not entered
+     *
+     * @param score value to add
+     * @return true if score was added
+     */
     public boolean addScore(int score) {
         if (score <= 0) {
             return false; // prevents losing scores from saving
@@ -79,12 +130,19 @@ public class Score implements ScoreHandler, Serializable {
         return isHighScore;
     }
 
-    // check if new entry is in the high score list
+    /**
+     * Checks if new score entry is a high score
+     *
+     * @param entry score to check
+     * @return true if score is within high score range
+     */
     public boolean checkHighScore(ScoreEntry entry) {
         return highScores.indexOf(entry) < maxStore;
     }
 
-    // stores current high scores to disk
+    /**
+     * Saves the current highscore list to file with serialization
+     */
     public void saveScores() {
         try (ObjectOutputStream out = new ObjectOutputStream(
                 new BufferedOutputStream(new FileOutputStream(scoreFile)))) {
@@ -94,7 +152,9 @@ public class Score implements ScoreHandler, Serializable {
         }
     }
 
-    // loading scores from disk
+    /**
+     * Loads the current highscore list with graceful error handling
+     */
     @SuppressWarnings("unchecked")
     private void loadScores() {
         File file = new File(scoreFile);
@@ -122,7 +182,11 @@ public class Score implements ScoreHandler, Serializable {
         }
     }
 
-    // formatting scores to string
+    /**
+     * Formats highscore list to a string with rank, value and date
+     *
+     * @return formatted string of highscores
+     */
     public String formatScores() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < highScores.size(); i++) {

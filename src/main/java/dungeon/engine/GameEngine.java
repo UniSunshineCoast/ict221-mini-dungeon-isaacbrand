@@ -1,9 +1,20 @@
 package dungeon.engine;
 
-import dungeon.engine.cells.Empty;
+import dungeon.engine.cells.Interaction;
+import dungeon.engine.cells.set.Empty;
 
 import java.io.*;
 
+/**
+ * Main class for handling game functionality
+ *
+ * Handles:
+ * - Game state management (level, player, difficulty and game status updates)
+ * - Movement processing
+ * - Level progression
+ * - Save/load functionality
+ * - Score tracking
+ */
 public class GameEngine implements Serializable {
     private Level currentLevel;
     private final Player player;
@@ -21,11 +32,17 @@ public class GameEngine implements Serializable {
     // save file name
     private final String savePath;
 
-    // constructor with dependencies
+    /**
+     * Constructor with full dependencies
+     *
+     * @param difficulty initial game difficulty (0-10)
+     * @param scoreHandler communicates with the ScoreHandler interface for score-related tasks
+     * @param savePath gamesave file storage path
+     */
     public GameEngine(int difficulty, ScoreHandler scoreHandler, String savePath) {
-        this.difficulty = Math.min(10, Math.max(0, difficulty)); // explain
+        this.difficulty = Math.min(10, Math.max(0, difficulty)); // difficulty between 0 and 10
         this.level = 1;
-        this.player = new Player(10, 100); // Injecting MAX_HP and MAX_STEPS
+        this.player = new Player(10, 100); // Injecting max health and steps
         this.gameOver = false;
         this.deathType = -1; // represents no death, 0 is death due to no hp, 1 is death due to max steps reached, etc...
         this.scoreImport = (Score) scoreHandler;
@@ -35,11 +52,19 @@ public class GameEngine implements Serializable {
         initLevel();
     }
 
-    // default constructor
+    /**
+     * Default constructor
+     *
+     * @param difficulty initial game difficulty (0-10)
+     */
     public GameEngine(int difficulty) {
         this(difficulty, new Score("md_highscores.dat"), "saves.dat");
     }
 
+    /**
+     * - Initialises a new level with initial difficulty
+     * - Places player at the default entry point
+     */
     private void initLevel() {
         currentLevel = new Level(level, difficulty, 10);
 
@@ -48,23 +73,49 @@ public class GameEngine implements Serializable {
         player.startPos(entryPos.getX(), entryPos.getY());
     }
 
-    // movement
+    //------------------------------------------------------------------------------------------- MOVEMENT
+
+    /**
+     * Moves player up
+     * @return string of movement result
+     */
     public String moveUp() {
         return processMove("up");
     }
 
+    /**
+     * Moves player down
+     * @return string of movement result
+     */
     public String moveDown() {
         return processMove("down");
     }
 
+    /**
+     * Moves player left
+     * @return string of movement result
+     */
     public String moveLeft() {
         return processMove("left");
     }
 
+    /**
+     * Moves player right
+     * @return string of movement result
+     */
     public String moveRight() {
         return processMove("right");
     }
 
+    /**
+     * Movement processing method
+     *
+     * Handles position calculation, collision checks, player/cell interactions,
+     * level transitions and ranged attack checks
+     *
+     * @param direction to move
+     * @return string of movement results (output)
+     */
     private String processMove(String direction) {
         Position oldPos = new Position(player.getPosition());
         Position newPos = new Position(oldPos);
@@ -165,7 +216,9 @@ public class GameEngine implements Serializable {
         return output;
     }
 
-    // could optimise with OR condition as only two checks
+    /**
+     * Checks if game is over based on game-over requirements and sets accordingly if valid
+     */
     private void checkGameOver() {
         if (!player.isAlive()) {
             gameOver = true;
@@ -178,36 +231,71 @@ public class GameEngine implements Serializable {
         }
     }
 
-    // map and game status getters
+    //------------------------------------------------------------------------------------------- GAME STATE
+
+    /**
+     * Current level size
+     * @return level size (width/height)
+     */
     public int getSize() {
         return currentLevel.getSize();
     }
 
+    /**
+     * Gets the 2d cell array level representation of the current level
+     * @return 2d array of cells
+     */
     public Cell[][] getMap() {
         return currentLevel.getMap();
     }
 
+    /**
+     * Gets the player
+     * @return player instance
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Checks if game is over
+     * @return true if game is over
+     */
     public boolean isGameOver() {
         return gameOver;
     }
 
+    /**
+     * Checks the type of game over instance that occured
+     * @return death type (-1 = no death, 0 = no hp, 1 = max steps)
+     */
     public int getDeathType() {
         return deathType;
     }
 
+    /**
+     * Gets formatted highscores
+     * @return string of formatted highscores
+     */
     public String getHighscores() {
         return scoreImport.formatScores();
     }
 
+    /**
+     * Gets the current level number
+     * @return current level
+     */
     public int getLevel() {
         return level;
     }
 
-    // save / load functionality
+    //------------------------------------------------------------------------------------------- SAVE/LOAD
+
+    /**
+     * Saves the current game to file
+     *
+     * @return String of save result status
+     */
     public String saveGame() {
         try (ObjectOutputStream out = new ObjectOutputStream(
                 new BufferedOutputStream(new FileOutputStream(savePath)))) {
@@ -218,6 +306,11 @@ public class GameEngine implements Serializable {
         }
     }
 
+    /**
+     * Loads a saved game instance from file
+     *
+     * @return true if load successful
+     */
     public boolean loadGame() {
         if (!saveExists()) {
             return false; // no save file
@@ -242,23 +335,38 @@ public class GameEngine implements Serializable {
         }
     }
 
+    /**
+     * Checks if a save instance exists
+     *
+     * @return true if save file exists
+     */
     public boolean saveExists() {
         File file = new File(savePath);
         return file.exists();
     }
 
-    // testing
+    //------------------------------------------------------------------------------------------- TESTING UTILS
+
+    /**
+     * Gets the current level object for testing
+     * @return current level object
+     */
     public Level getCurrentLevel() {
         return currentLevel;
     }
 
+    /**
+     * Sets the current level
+     * @param level number to set
+     */
     public void setLevel(int level) {
         this.level = level;
     }
 
-    /**
-     * Plays a text-based game
-     */
+    //------------------------------------------------------------------------------------------- START METHOD
+
+
+    // Creates a ConsoleUI instance and starts a console version of the game
     public static void main(String[] args) {
         // creating console ui and starting game
         ConsoleUI consoleUI = new ConsoleUI();

@@ -10,6 +10,17 @@ import javafx.scene.layout.GridPane;
 import java.io.File;
 import java.util.Optional;
 
+/**
+ * Controller class for game GUI
+ * Handles:
+ * - Game GUI initialisation and config
+ * - User input processing
+ * - UI updates and state changes
+ * - Map rendering and player visualisation
+ * - Game status outputs
+ * - Save/load functionality
+ * - Game over conditions and display
+ */
 public class Controller {
     @FXML private GridPane gridPane;
     @FXML private Label hpLabel;
@@ -29,6 +40,10 @@ public class Controller {
     private GameEngine engine;
     private final String savePath = "md_saves.dat";
 
+    /**
+     * Initalises the controller class
+     * Preloads game assets, checks for save games, initialises UI and prepares game state
+     */
     @FXML
     public void initialize() {
         // pre-loading images
@@ -56,6 +71,9 @@ public class Controller {
         Platform.runLater(this::updateGui);
     }
 
+    /**
+     * Displays load request pending user input to create a new game or load existing game
+     */
     private void askLoadGame() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Load Game");
@@ -75,6 +93,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Displays difficulty request pending user input to create a game engine instance of difficulty selected
+     */
     private void askDifficulty() {
         TextInputDialog dialog = new TextInputDialog("3");
         dialog.setTitle("Difficulty");
@@ -99,6 +120,9 @@ public class Controller {
             status("Welcome to the MiniDungeon! New game started with difficulty " + difficulty + ".");
         }
 
+    /**
+     * Attempts to load a saved game, fallbacks to new game creation
+     */
     private void loadGame() {
         engine = new GameEngine(0, new dungeon.engine.Score("md_highscores.dat"), savePath);
         if (engine.loadGame()) {
@@ -109,6 +133,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Updates GUI, renders game map, updates player stats, checks game state
+     * Handles dynamic sizing and cell placements
+     */
     private void updateGui() {
         if (engine == null) return;
 
@@ -174,18 +202,28 @@ public class Controller {
         }
     }
 
+    /**
+     * Adds auto-scrolling text to the status area
+     * @param message text to input into status area
+     */
     private void status(String message) {
         statusArea.appendText(message + "\n");
         // auto-scroll
         statusArea.setScrollTop(Double.MAX_VALUE);
     }
 
+    /**
+     * Updates UI highscore display
+     */
     private void updateHighScores() {
         if (engine != null) {
             highscoreArea.setText(engine.getHighscores());
         }
     }
 
+    /**
+     * Handles game over display, disables controls and shows final score
+     */
     private void gameOver() {
         String message;
         int deathType = engine.getDeathType();
@@ -210,6 +248,9 @@ public class Controller {
         updateHighScores();
     }
 
+    /**
+     * Disables controls on game over
+     */
     private void disableControls() {
         upButton.setDisable(true);
         downButton.setDisable(true);
@@ -218,14 +259,19 @@ public class Controller {
         saveButton.setDisable(true);
     }
 
-    // event handlers
+    //-------------------------------------------------------------------------- EVENT HANDLERS
+    // handles up button interaction
     @FXML
     private void handleUp() {
+        // string of result
         String result = engine.moveUp();
+        // adding result to status display
         status(result);
+        // updating GUI
         updateGui();
     }
 
+    // handles down button interaction
     @FXML
     private void handleDown() {
         String result = engine.moveDown();
@@ -233,6 +279,7 @@ public class Controller {
         updateGui();
     }
 
+    // handles left button interaction
     @FXML
     private void handleLeft() {
         String result = engine.moveLeft();
@@ -240,6 +287,7 @@ public class Controller {
         updateGui();
     }
 
+    // handles right button interaction
     @FXML
     private void handleRight() {
         String result = engine.moveRight();
@@ -247,6 +295,7 @@ public class Controller {
         updateGui();
     }
 
+    // handles save button interaction
     @FXML
     private void handleSave() {
         String result = engine.saveGame();
@@ -254,6 +303,7 @@ public class Controller {
         updateGui();
     }
 
+    // handles help button interaction
     @FXML
     private void handleHelp() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -261,24 +311,24 @@ public class Controller {
         alert.setHeaderText("Dungeon Help");
         alert.setContentText("""
                 Commands:
-                u - move up
-                d - move down
-                l - move left
-                r - move right
-                s - save game
-                q - quit game
-                h - help
+                up - move up
+                down - move down
+                left - move left
+                right - move right
+                save - save game
+                quit - quit game
+                help - help
                 
                 Cells:
-                P - player
-                # - wall
-                G - gold
-                H - health potion
-                T - trap
-                M - melee mutant
-                R - ranged mutant
-                E - entry
-                L - ladder
+                P - player (grey)
+                # - wall (black)
+                G - gold (gold)
+                H - health potion (light pink)
+                T - trap (orange)
+                M - melee mutant (off-green)
+                R - ranged mutant (dark pink)
+                E - entry (dark grey)
+                L - ladder (light green)
                 
                 Goal:
                 Find the ladder in each level and keep progressing until you are done.
@@ -286,6 +336,7 @@ public class Controller {
         alert.showAndWait();
     }
 
+    // handles quit button interaction with confirmation and an option to save game and then quit
     @FXML
     private void handleQuit() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

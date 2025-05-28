@@ -1,18 +1,18 @@
-package dungeon.engine.cells;
+package dungeon.engine.cells.interactable;
 
 import dungeon.engine.Cell;
-import dungeon.engine.Interaction;
+import dungeon.engine.cells.Interaction;
 import dungeon.engine.Player;
 
-// entry cell
-public class Entry extends Cell implements Interaction {
-    public Entry() {
-        super('E', true);
+// trap cell (interactable)
+public class Trap extends Cell implements Interaction {
+    public Trap() {
+        super('T', true);
     }
 
     @Override
     public String interact(Player player) {
-        return "You arrive at the entry to a new level";
+        return "You fell for a trap and lost 2 HP.";
     }
 
     @Override
@@ -22,11 +22,11 @@ public class Entry extends Cell implements Interaction {
 
     @Override
     public boolean canDamage() {
-        return false;
+        return true;
     }
 
     @Override public int getDamage() {
-        return 0;
+        return 2;
     }
 
     @Override

@@ -1,12 +1,17 @@
-package dungeon.engine.cells;
+package dungeon.engine.cells.interactable;
 
 import dungeon.engine.Cell;
-import dungeon.engine.Interaction;
+import dungeon.engine.cells.Interaction;
 import dungeon.engine.Player;
 
-// abstract for gold + health potion collectable items
+// abstract class for gold + health potion cells (interactable)
 public abstract class Collectable extends Cell implements Interaction {
 
+    /**
+     * Creates a new collectable cell
+     *
+     * @param cellSymbol cell character symbol
+     */
     public Collectable(char cellSymbol) {
         super(cellSymbol, true);
     }
@@ -27,7 +32,6 @@ public abstract class Collectable extends Cell implements Interaction {
         return 0;
     }
 
-    // subclasses will override both getHeal and getScore methods depending on needs, currently just placeholders for base implementation
     @Override
     public int getHeal() {
         return 0;

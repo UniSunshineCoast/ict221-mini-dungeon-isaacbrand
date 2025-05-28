@@ -1,20 +1,18 @@
-package dungeon.engine.cells;
+package dungeon.engine.cells.interactable;
 
 import dungeon.engine.Cell;
-import dungeon.engine.Interaction;
+import dungeon.engine.cells.Interaction;
 import dungeon.engine.Player;
 
-// trap cell with player interaction
-public class Trap extends Cell implements Interaction {
-    private static final int DAMAGE = 2;
-
-    public Trap() {
-        super('T', true);
+// ladder cell (interactable)
+public class Ladder extends Cell implements Interaction {
+    public Ladder() {
+        super('L', true);
     }
 
     @Override
     public String interact(Player player) {
-        return "You fell for a trap and lost " + DAMAGE + " HP.";
+        return "You found a ladder!";
     }
 
     @Override
@@ -24,11 +22,11 @@ public class Trap extends Cell implements Interaction {
 
     @Override
     public boolean canDamage() {
-        return true;
+        return false;
     }
 
     @Override public int getDamage() {
-        return DAMAGE;
+        return 0;
     }
 
     @Override
