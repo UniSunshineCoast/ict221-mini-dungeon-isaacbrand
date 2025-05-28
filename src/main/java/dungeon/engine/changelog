@@ -202,3 +202,8 @@ Bug fixes and improvements
 Mutant, RangedMutant and Trap classes into cells.interactable
 > Improved OOD of Map interface
 
+v1.0.1-----------------------------------------------------------------------------------------------------------
+Bug fix
+
+> Fixed cells increasing size exponentially in laptop version
+

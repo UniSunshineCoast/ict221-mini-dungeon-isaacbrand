@@ -147,26 +147,8 @@ public class Controller {
         Cell[][] map = engine.getMap();
         Position playerPos = engine.getPlayer().getPosition();
 
-        // grabbing current width and height of Gridpane
-        double paneWidth = gridPane.getWidth();
-        double paneHeight = gridPane.getHeight();
-
-        // calculating width / height by subtracting padding
-        double paddingLeft = gridPane.getPadding().getLeft();
-        double paddingRight = gridPane.getPadding().getRight();
-        double paddingTop = gridPane.getPadding().getTop();
-        double paddingBottom = gridPane.getPadding().getBottom();
-
-        double activeWidth = paneWidth - paddingLeft - paddingRight;
-        double activeHeight = paneHeight - paddingTop - paddingBottom;
-
-        double cellSize = 0;
-        if (activeWidth > 0 && activeHeight > 0) {
-            cellSize = Math.min(
-                    activeHeight / engine.getSize()
-                    ,activeWidth / engine.getSize()
-            );
-        }
+        // cell size
+        double cellSize = 35.0;
 
         // player stat updates
         Player player = engine.getPlayer();
